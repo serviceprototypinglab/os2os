@@ -19,6 +19,8 @@ import (
 	"fmt"
 	"github.com/spf13/cobra"
 	"os/exec"
+	"os"
+	"syscall"
 )
 
 var Path string
@@ -55,10 +57,19 @@ func init() {
 
 
 func export(cmd *cobra.Command, args []string){
-	fmt.Println("export called")
-	//fmt.Println(cmd)
-	fmt.Println(args)
-	fmt.Println(Path)
-	fmt.Println(Project)
-	os.exect
+
+	fmt.Println("exporting ...")
+	binary, lookErr := exec.LookPath("oc")
+	if lookErr != nil {
+		panic(lookErr)
+	}
+	fmt.Println("Using the binary in " + binary)
+	args1 := []string{"oc", "project", Project}
+	env := os.Environ()
+	execErr := syscall.Exec(binary, args1, env)
+	if execErr != nil {
+		panic(execErr)
+	}
+
+	args1 := []string{"oc", "export", ""}
 }
