@@ -53,6 +53,7 @@ func export(cmd *cobra.Command, args []string) {
 	os.Mkdir(Path, os.FileMode(0777)) //All permision
 
 	changeProject(Project)
+	//TODO Do it for all the objects.
 	objectsOc := []string{"deployment", "service"}
 	for _, typeObject := range objectsOc {
 		typetString := getObjects(typeObject)
