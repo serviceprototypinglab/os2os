@@ -50,64 +50,44 @@ func init() {
 }
 
 func export(cmd *cobra.Command, args []string) {
-	os.Mkdir(Path, os.FileMode(0777)) //All permision
-
+	os.Mkdir(Path, os.FileMode(0777)) //All permision??
 	changeProject(Project)
 	//TODO Do it for all the objects.
-	objectsOc := []string{"deployment", "service"}
+	//objectsOc := []string{"deployment", "service", "job"}
+	/* "cluster", "imagestreamimage", "petset",*/
+	objectsOc := []string{"buildconfig", "build", "componentstatus", "configmap", "daemonset","daemonset","deployment", "deploymentconfig",
+		"event","endpoints","horizontalpodautoscaler","imagestream","imagestreamtag","ingress","group","job",
+		"limitrange","node","namespace","pod","persistentvolume","persistentvolumeclaim","policy","project","quota",
+		"resourcequota","replicaset","replicationcontroller","rolebinding","route","secret","serviceaccount","service","user"}
 	for _, typeObject := range objectsOc {
-		typetString := getObjects(typeObject)
-		os.Mkdir(Path+"/"+typeObject, os.FileMode(0777))
-		namesDeployments := filterTableFirstColumn(typetString)
-		for _, v := range namesDeployments {
-			exportObject(typeObject, v)
+		typeString := getObjects(typeObject)
+		if typeString != "" {
+			os.Mkdir(Path+"/"+typeObject, os.FileMode(0777))
+			namesDeployments := filterTableFirstColumn(typeString)
+			for _, v := range namesDeployments {
+				exportObject(typeObject, v)
+			}
 		}
 	}
-
 }
 
 func getObjects(typeObject string) string {
-	if typeObject == "deployment" {
-		CmdGetDeployments := exec.Command("oc", "get", "deployments")
-		CmdOut, err := CmdGetDeployments.Output()
-		if err != nil {
-			fmt.Println("Error running CmdGetDeployments")
-			fmt.Println(err)
-			panic(err)
-		}
-		return string(CmdOut)
-	}
-
-	if typeObject == "service" {
-		CmdGetDeployments := exec.Command("oc", "get", "services")
-		CmdOut, err := CmdGetDeployments.Output()
-		if err != nil {
-			fmt.Println("Error running CmdGetDeployments")
-			fmt.Println(err)
-			panic(err)
-		}
-		return string(CmdOut)
-	}
-
-	return ""
+	CmdGetDeployments := exec.Command("oc", "get", typeObject)
+	CmdOut, err := CmdGetDeployments.Output()
+	checkErrorMessage(err, "Error running get " + typeObject)
+	return string(CmdOut)
 }
 
 func changeProject(projectName string) {
 	CmdProject := exec.Command("oc", "project", projectName)
 	CmdProjectOut, err := CmdProject.Output()
-	if err != nil {
-		fmt.Println("Error running change project")
-		fmt.Println(err)
-		panic(err)
-	}
+	checkErrorMessage(err, "Error running change project")
 	fmt.Println(string(CmdProjectOut))
 }
 
 func filterTableFirstColumn(table string) []string {
 	OutPutStrings := strings.Split(table,"\n")
 	res := make([]string, 0)
-	//fmt.Println(string(CmdGetDeploymentsOut))
-	//fmt.Println(OutPutStrings)
 	for _, v := range OutPutStrings {
 		if v != "" {
 			nameObject := strings.Fields(v)[0]
@@ -120,31 +100,28 @@ func filterTableFirstColumn(table string) []string {
 }
 
 func exportObject(typeObject, nameObject string) {
-	if typeObject == "deployment" {
-		CmdGetDeployments := exec.Command("oc", "export", typeObject, nameObject, "-o", "json")
-		CmdOut, err := CmdGetDeployments.Output()
-		check(err)
-		f, err := os.Create(Path+"/"+typeObject+"/"+ nameObject+".json")
-		check(err)
-		f.WriteString(string(CmdOut))
-
-		f.Sync()
-	}
-
-	if typeObject == "service" {
-		CmdGetDeployments := exec.Command("oc", "export", typeObject, nameObject, "-o", "json")
-		CmdOut, err := CmdGetDeployments.Output()
-		check(err)
-		f, err := os.Create(Path+"/"+typeObject+"/"+ nameObject+".json")
-		check(err)
-		f.WriteString(string(CmdOut))
-		f.Sync()
-	}
+	CmdGetDeployments := exec.Command("oc", "export", typeObject, nameObject, "-o", "json")
+	CmdOut, err := CmdGetDeployments.Output()
+	checkError(err)
+	f, err := os.Create(Path+"/"+typeObject+"/"+ nameObject+".json")
+	checkError(err)
+	f.WriteString(string(CmdOut))
+	f.Sync()
 }
 
-func check(err error){
+func checkError(err error) {
 	if err != nil {
 		panic(err)
 	}
 }
+
+func checkErrorMessage(err error, message string){
+	if err != nil {
+		fmt.Println(message)
+		panic(err)
+	}
+}
+
+
+
 
