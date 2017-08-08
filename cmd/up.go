@@ -63,7 +63,6 @@ func create(path string){
 	CmdCreateOut, err := CmdCreate.Output()
 	checkErrorMessage(err, "Error running create with path " + path)
 	fmt.Println(string(CmdCreateOut))
-
 }
 
 

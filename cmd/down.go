@@ -15,7 +15,7 @@ package cmd
 
 import (
 	"fmt"
-
+	"os/exec"
 	"github.com/spf13/cobra"
 )
 
@@ -31,7 +31,28 @@ This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("down called")
+		down(cmd, args)
 	},
+}
+
+
+func down(cmd *cobra.Command, args []string) {
+	loginCluster(ClusterFrom, UsernameFrom, PasswordFrom)
+	changeProject(Project)
+	for _, typeObject := range ObjectsOc {
+		fullPath := Path + "/" + typeObject
+		delete(fullPath)
+	}
+}
+
+func delete(path string){
+	CmdDelete := exec.Command("oc", "delete", "-f",  path)
+	CmdDeleteOut, err := CmdDelete.Output()
+	if CmdDeleteOut != nil {
+		fmt.Println(string(CmdDeleteOut))
+	}
+	checkErrorMessage(err, "Error running delete with path " + path)
+
 }
 
 func init() {
