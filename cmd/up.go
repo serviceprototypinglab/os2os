@@ -15,9 +15,10 @@ package cmd
 
 import (
 	"fmt"
-
+	"os/exec"
 	"github.com/spf13/cobra"
 )
+
 
 // upCmd represents the up command
 var upCmd = &cobra.Command{
@@ -31,6 +32,7 @@ This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("up called")
+		up(cmd, args)
 	},
 }
 
@@ -42,8 +44,49 @@ func init() {
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
 	// upCmd.PersistentFlags().String("foo", "", "A help for foo")
-
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// upCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
+
+func up(cmd *cobra.Command, args []string) {
+	loginCluster(ClusterTo, UsernameTo, PasswordTo)
+	changeProject(Project)
+	for _, typeObject := range ObjectsOc {
+		fullPath := Path + "/" + typeObject
+		create(fullPath)
+	}
+}
+
+func create(path string){
+	CmdCreate := exec.Command("oc", "create", "-f",  path)
+	CmdCreateOut, err := CmdCreate.Output()
+	checkErrorMessage(err, "Error running create with path " + path)
+	fmt.Println(string(CmdCreateOut))
+
+}
+
+
+/*func loginCluster(cluster, username, password string) {
+	username = "--username=" + username
+	password = "--password=" + password
+	CmdLogin := exec.Command("oc", "login", cluster, username, password)
+	CmdOut, err := CmdLogin.Output()
+	checkErrorMessage(err, "Error running login")
+	fmt.Println(string(CmdOut))
+}*/
+
+/*func changeProject(projectName string) {
+	CmdProject := exec.Command("oc", "project", projectName)
+	CmdProjectOut, err := CmdProject.Output()
+	checkErrorMessage(err, "Error running change project")
+	fmt.Println(string(CmdProjectOut))
+}
+
+func checkErrorMessage(err error, message string) {
+	if err != nil {
+		fmt.Println(message)
+		panic(err)
+	}
+} */
+
