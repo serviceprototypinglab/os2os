@@ -14,6 +14,7 @@
 package cmd
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/spf13/cobra"
 	"os/exec"
@@ -30,7 +31,7 @@ var exportCmd = &cobra.Command{
 		   The templates of the objects (deployments, pods, services, ...) will be save
 		   in the path indicated (./templates by default)`,
 	Run: func(cmd *cobra.Command, args []string) {
-		export(cmd, args)
+		export1(cmd, args)
 	},
 }
 
@@ -74,6 +75,56 @@ func export(cmd *cobra.Command, args []string) {
 			}
 		}
 	}
+	fmt.Println("Templates created")
+}
+
+func export1(cmd *cobra.Command, args []string) {
+
+
+	loginCluster(ClusterFrom, UsernameFrom, PasswordFrom)
+	os.Mkdir(Path, os.FileMode(0777)) //All permision??
+	changeProject(Project)
+
+	for _, typeObject := range ObjectsOc {
+		typeString := getObjects1(typeObject)
+		items := typeString
+		// TODO get items
+		fmt.Println(items)
+		byt := []byte(typeString)
+		var dat map[string]interface{}
+		if err := json.Unmarshal(byt, &dat); err != nil {
+			panic(err)
+		}
+		//fmt.Println(dat["items"].([]interface{})[0].(map[string]interface{})["kind"])
+		/*for i, v := range dat["items"]{
+			fmt.Println(v["kind"])
+		}*/
+
+		fmt.Println("-----")
+		fmt.Println(dat)
+		if items != "" {
+			//Create a folder for each resource
+			os.Mkdir(Path+"/"+typeObject, os.FileMode(0777))
+			//Take all the names of the resource
+			for i, _ := range items {
+				//write json
+				fmt.Println(i)
+				break
+			}
+		}
+	}
+	fmt.Println("Templates created")
+}
+
+func getObjects1(typeObject string) string {
+	CmdGetDeployments := exec.Command("oc", "get", typeObject, "-o", "json")
+	CmdOut, err := CmdGetDeployments.Output()
+	if err != nil {
+		fmt.Println("getObjects error in type " + typeObject)
+		return ""
+	}
+	//checkErrorMessage(err, "Error running get " + typeObject)
+	return string(CmdOut)
 }
 
 func loginCluster(cluster, username, password string) {
@@ -89,14 +140,18 @@ func loginCluster(cluster, username, password string) {
 func getObjects(typeObject string) string {
 	CmdGetDeployments := exec.Command("oc", "get", typeObject)
 	CmdOut, err := CmdGetDeployments.Output()
-	checkErrorMessage(err, "Error running get " + typeObject)
+	if err != nil {
+		fmt.Println("getObjects error in type " + typeObject)
+		return ""
+	}
+	//checkErrorMessage(err, "Error running get " + typeObject)
 	return string(CmdOut)
 }
 
 func changeProject(projectName string) {
 	CmdProject := exec.Command("oc", "project", projectName)
 	CmdProjectOut, err := CmdProject.Output()
-	checkErrorMessage(err, "Error running change project")
+	checkErrorMessage(err, "Error running: change project")
 	fmt.Println(string(CmdProjectOut))
 }
 
@@ -118,9 +173,17 @@ func filterTableFirstColumn(table string) []string {
 func exportObject(typeObject, nameObject string) {
 	CmdGetDeployments := exec.Command("oc", "export", typeObject, nameObject, "-o", "json")
 	CmdOut, err := CmdGetDeployments.Output()
-	checkError(err)
+	if err != nil {
+		fmt.Println("Error with the object " + typeObject + " called " + nameObject)
+		return
+	}
+	//checkError(err)
 	f, err := os.Create(Path+"/"+typeObject+"/"+ nameObject+".json")
-	checkError(err)
+	//checkError(err)
+	if err != nil {
+		fmt.Println("Error with the object " + typeObject + " called " + nameObject)
+		return
+	}
 	f.WriteString(string(CmdOut))
 	f.Sync()
 }

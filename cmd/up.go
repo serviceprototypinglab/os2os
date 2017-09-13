@@ -61,7 +61,10 @@ func up(cmd *cobra.Command, args []string) {
 func create(path string){
 	CmdCreate := exec.Command("oc", "create", "-f",  path)
 	CmdCreateOut, err := CmdCreate.Output()
-	checkErrorMessage(err, "Error running create with path " + path)
+	if err != nil {
+		fmt.Println("Error creating " + path)
+	}
+	//checkErrorMessage(err, "Error running create with path " + path)
 	fmt.Println(string(CmdCreateOut))
 }
 

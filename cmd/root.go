@@ -23,8 +23,17 @@ import (
 )
 
 var cfgFile, ClusterFrom, ClusterTo, Project, Path, UsernameFrom, UsernameTo,  PasswordFrom, PasswordTo string
-var ObjectsOc = []string{"deployment", "service"}
-
+var ObjectsOc = []string{"service", "deployment"}
+/*var ObjectsOc = []string{"service", "buildconfig", "build", "configmap", "daemonset","daemonset","deployment",
+	"deploymentconfig",
+	"event","endpoints","horizontalpodautoscaler","imagestream","imagestreamtag","ingress","group","job",
+	"limitrange","node","namespace","pod","persistentvolume","persistentvolumeclaim","policy","project","quota",
+	"resourcequota","replicaset","replicationcontroller","rolebinding","route","secret","serviceaccount","service","user"}
+/* "cluster", "imagestreamimage", "petset", "componentstatus"
+objectsOc := []string{"buildconfig", "build", "configmap", "daemonset","daemonset","deployment", "deploymentconfig",
+	"event","endpoints","horizontalpodautoscaler","imagestream","imagestreamtag","ingress","group","job",
+	"limitrange","node","namespace","pod","persistentvolume","persistentvolumeclaim","policy","project","quota",
+	"resourcequota","replicaset","replicationcontroller","rolebinding","route","secret","serviceaccount","service","user"}*/
 // RootCmd represents the base command when called without any subcommands
 var RootCmd = &cobra.Command{
 	Use:   "os2os",
@@ -47,7 +56,7 @@ func Execute() {
 	}
 }
 
-func init() { 
+func init() {
 	cobra.OnInitialize(initConfig)
 
 	// Here you will define your flags and configuration settings.
