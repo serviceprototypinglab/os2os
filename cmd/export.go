@@ -87,29 +87,47 @@ func export1(cmd *cobra.Command, args []string) {
 
 	for _, typeObject := range ObjectsOc {
 		typeString := getObjects1(typeObject)
-		items := typeString
 		// TODO get items
-		fmt.Println(items)
+		//fmt.Println(items)
 		byt := []byte(typeString)
 		var dat map[string]interface{}
 		if err := json.Unmarshal(byt, &dat); err != nil {
 			panic(err)
 		}
-		//fmt.Println(dat["items"].([]interface{})[0].(map[string]interface{})["kind"])
+		items := dat["items"].([]interface{})
+
+		//fmt.Println(dat["items"].([]interface{})[0].(map[string]interface{})["metadata"].(map[string]interface{})["name"])
 		/*for i, v := range dat["items"]{
 			fmt.Println(v["kind"])
-		}*/
-
+		}
+		if str, ok := data.(string); ok {
+     act on str
+	} else {
+	 not string
+	}
+		*/
 		fmt.Println("-----")
 		fmt.Println(dat)
-		if items != "" {
+		//fmt.Println(items)cl
+		if typeString != "" {
 			//Create a folder for each resource
 			os.Mkdir(Path+"/"+typeObject, os.FileMode(0777))
 			//Take all the names of the resource
-			for i, _ := range items {
-				//write json
-				fmt.Println(i)
-				break
+			for i := range items {
+				nameObjectOs := string(items[i].(map[string]interface{})["metadata"].(map[string]interface{})["name"].(string))
+				objectOs, err := json.Marshal(items[i])
+				fmt.Println("-----")
+				checkError(err)
+				fmt.Println(string(objectOs))
+				fmt.Println(nameObjectOs)
+				f, err := os.Create(Path+"/"+typeObject+"/"+ nameObjectOs+".json")
+				//checkError(err)
+				if err != nil {
+					fmt.Println("Error with the object " + typeObject + " called " + nameObjectOs)
+					return
+				}
+				f.WriteString(string(objectOs))
+				f.Sync()
 			}
 		}
 	}
