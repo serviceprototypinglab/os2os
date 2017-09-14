@@ -16,14 +16,14 @@ package cmd
 import (
 	"fmt"
 	"os"
-
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
 
 var cfgFile, ClusterFrom, ClusterTo, Project, Path, UsernameFrom, UsernameTo,  PasswordFrom, PasswordTo string
-var ObjectsOc = []string{"service", "deployment"}
+var ObjectsOc []string
+
 /*var ObjectsOc = []string{"service", "buildconfig", "build", "configmap", "daemonset","daemonset","deployment",
 	"deploymentconfig",
 	"event","endpoints","horizontalpodautoscaler","imagestream","imagestreamtag","ingress","group","job",
@@ -72,8 +72,12 @@ func init() {
 	RootCmd.PersistentFlags().StringVarP(&PasswordTo, "passwordTo", "", "developer", "password in the cluster To")
 	RootCmd.PersistentFlags().StringVarP(&Path, "path","", "./templates", "path where export the templates")
 
+	defaultValue := []string{"default"}
+	RootCmd.PersistentFlags().StringArrayVarP(&ObjectsOc, "objects", "o", defaultValue, "objects to export" )
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
+
+
 	RootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
 

@@ -21,10 +21,10 @@ Use help to see all the flags.
 If no configuration is given to the tool, it will take the default values.
 
 ```
-os2os help
-os2os export
-os2os up
-os2os down
+    os2os help
+    os2os export
+    os2os up
+    os2os down
 ```
 
 ## Installation
@@ -33,17 +33,20 @@ os2os down
 
 - https://docs.openshift.org/latest/cli_reference/get_started_cli.html#installing-the-cli
 
+### From binary
+
 ### Install the binary: `os2os`
 
 Download the binary from /binaries/<your operative system> and run:
 
 ```
-chmod +x os2os
-sudo mv ./os2os /usr/local/bin/os2os
+    chmod +x os2os
+    sudo mv ./os2os /usr/local/bin/os2os
 ```
- 
-## Road Map
 
-- Right size: Adapt the number of pods to your new cluster and the resources used per container.
-- Convert: To help for change some properties in your templates before to migrate to your new cluster.
-- Migrate the data: Make as automatic as is possible the migration of the data between the clusters.
+### From source
+ 
+```
+    git clone
+    go build os2os
+```
