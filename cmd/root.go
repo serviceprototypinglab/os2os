@@ -73,7 +73,7 @@ func init() {
 	RootCmd.PersistentFlags().StringVarP(&Path, "path","", "./templates", "path where export the templates")
 
 	defaultValue := []string{"default"}
-	RootCmd.PersistentFlags().StringArrayVarP(&ObjectsOc, "objects", "o", defaultValue, "objects to export" )
+	RootCmd.PersistentFlags().StringArrayVarP(&ObjectsOc, "objects", "o", defaultValue, "list of objects to export" )
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
 

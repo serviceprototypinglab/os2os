@@ -16,7 +16,7 @@ With `export`, you will export the templates from a cluster.
 With `up`, you will uploads your templates.
 With `down`, you will delete a project in a cluster.
 
-The configuration can be added in ~/.os2os.yaml or directly with the flags.
+The configuration can be added in ~/.os2os.yaml or directly using the flags.
 Use help to see all the flags.
 If no configuration is given to the tool, it will take the default values.
 

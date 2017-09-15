@@ -30,7 +30,6 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("down called")
 		down(cmd, args)
 	},
 }
@@ -39,6 +38,7 @@ to quickly create a Cobra application.`,
 func down(cmd *cobra.Command, args []string) {
 	loginCluster(ClusterFrom, UsernameFrom, PasswordFrom)
 	changeProject(Project)
+	ObjectsOc = getTypeObjects(ObjectsOc)
 	for _, typeObject := range ObjectsOc {
 		fullPath := Path + "/" + typeObject
 		delete(fullPath)
@@ -51,8 +51,10 @@ func delete(path string){
 	if CmdDeleteOut != nil {
 		fmt.Println(string(CmdDeleteOut))
 	}
-	checkErrorMessage(err, "Error running delete with path " + path)
+	if err != nil {
+		fmt.Println("Error deleting " + path)
 
+	}
 }
 
 func init() {
