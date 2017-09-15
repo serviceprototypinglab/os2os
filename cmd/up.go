@@ -50,7 +50,7 @@ func init() {
 
 func up(cmd *cobra.Command, args []string) {
 	loginCluster(ClusterTo, UsernameTo, PasswordTo)
-	changeProject(Project)
+	changeProject(ProjectTo)
 	ObjectsOc = getTypeObjects(ObjectsOc)
 	for _, typeObject := range ObjectsOc {
 		fullPath := Path + "/" + typeObject

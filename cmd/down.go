@@ -37,7 +37,7 @@ to quickly create a Cobra application.`,
 
 func down(cmd *cobra.Command, args []string) {
 	loginCluster(ClusterFrom, UsernameFrom, PasswordFrom)
-	changeProject(Project)
+	changeProject(ProjectFrom)
 	ObjectsOc = getTypeObjects(ObjectsOc)
 	for _, typeObject := range ObjectsOc {
 		fullPath := Path + "/" + typeObject

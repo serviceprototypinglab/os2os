@@ -21,7 +21,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-var cfgFile, ClusterFrom, ClusterTo, Project, Path, UsernameFrom, UsernameTo,  PasswordFrom, PasswordTo string
+var cfgFile, ClusterFrom, ClusterTo, ProjectFrom, ProjectTo, Path, UsernameFrom, UsernameTo,  PasswordFrom, PasswordTo string
 var ObjectsOc []string
 
 /*var ObjectsOc = []string{"service", "buildconfig", "build", "configmap", "daemonset","daemonset","deployment",
@@ -65,7 +65,8 @@ func init() {
 	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.os2os.yaml)")
 	RootCmd.PersistentFlags().StringVarP(&ClusterFrom, "clusterFrom", "", "https://127.0.0.1:8443", "Cluster where is the project that you want to migrate")
 	RootCmd.PersistentFlags().StringVarP(&ClusterTo, "clusterTo", "", "https://192.168.99.100:8443", "Cluster where you want to migrate the project")
-	RootCmd.PersistentFlags().StringVarP(&Project, "project", "p", "myproject", "name of the Openshift project")
+	RootCmd.PersistentFlags().StringVarP(&ProjectFrom, "projectFrom", "", "myproject", "name of the old Openshift project")
+	RootCmd.PersistentFlags().StringVarP(&ProjectTo, "projectTo", "", "myproject", "name of the new Openshift project")
 	RootCmd.PersistentFlags().StringVarP(&UsernameFrom, "usernameFrom", "", "developer", "username in the cluster From")
 	RootCmd.PersistentFlags().StringVarP(&UsernameTo, "usernameTo", "", "developer", "username in the cluster To")
 	RootCmd.PersistentFlags().StringVarP(&PasswordFrom, "passwordFrom", "", "developer", "password in the cluster From")

@@ -69,7 +69,7 @@ func export(cmd *cobra.Command, args []string) {
 	// Login in the cluster and change the project
 	loginCluster(ClusterFrom, UsernameFrom, PasswordFrom)
 	os.Mkdir(Path, os.FileMode(0777)) //All permision??
-	changeProject(Project)
+	changeProject(ProjectFrom)
 
 	for _, typeObject := range ObjectsOc {
 		fmt.Println("Starting exporting the objects with kind: " + typeObject)
@@ -196,7 +196,7 @@ func export1(cmd *cobra.Command, args []string) {
 
 	loginCluster(ClusterFrom, UsernameFrom, PasswordFrom)
 	os.Mkdir(Path, os.FileMode(0777)) //All permision??
-	changeProject(Project)
+	changeProject(ProjectFrom)
 	//TODO Do it for all the objects.
 
 	/* "cluster", "imagestreamimage", "petset", "componentstatus"
