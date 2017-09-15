@@ -52,6 +52,7 @@ Download the binary from /binaries/< your operative system> and run:
     go get github.com/mitchellh/go-homedir
     go get github.com/spf13/cobra
     go get github.com/spf13/viper
+    cd $GOPATH/src/os2os
     go build os2os
     chmod +x os2os
     sudo mv ./os2os /usr/local/bin/os2os
