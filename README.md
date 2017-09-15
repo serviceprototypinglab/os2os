@@ -35,9 +35,9 @@ If no configuration is given to the tool, it will take the default values.
 
 ### From binary
 
-### Install the binary: `os2os`
+#### Install the binary: `os2os`
 
-Download the binary from /binaries/<your operative system> and run:
+Download the binary from /binaries/< your operative system> and run:
 
 ```
     chmod +x os2os
@@ -47,6 +47,12 @@ Download the binary from /binaries/<your operative system> and run:
 ### From source
  
 ```
-    git clone
+    git clone <this repository>
+    mv os2os $GOPATH/src/os2os
+    go get github.com/mitchellh/go-homedir
+    go get github.com/spf13/cobra
+    go get github.com/spf13/viper
     go build os2os
+    chmod +x os2os
+    sudo mv ./os2os /usr/local/bin/os2os
 ```
