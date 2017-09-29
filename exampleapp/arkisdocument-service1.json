@@ -1,0 +1,27 @@
+{
+  "kind": "Service",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "arkisdocument1",
+    "namespace": "myproject",
+    "creationTimestamp": null,
+    "labels": {
+      "service": "arkisdocument1"
+    }
+  },
+  "spec": {
+    "ports": [
+      {
+        "name": "55555",
+        "protocol": "TCP",
+        "port": 55555,
+        "targetPort": 55555,
+        "nodePort": 30002
+      }
+    ],
+    "selector": {
+      "service": "arkisdocument"
+    },
+    "type": "NodePort"
+  }
+}

@@ -31,7 +31,6 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("up called")
 		up(cmd, args)
 	},
 }
@@ -51,7 +50,8 @@ func init() {
 
 func up(cmd *cobra.Command, args []string) {
 	loginCluster(ClusterTo, UsernameTo, PasswordTo)
-	changeProject(Project)
+	changeProject(ProjectTo)
+	ObjectsOc = getTypeObjects(ObjectsOc)
 	for _, typeObject := range ObjectsOc {
 		fullPath := Path + "/" + typeObject
 		create(fullPath)
@@ -61,31 +61,11 @@ func up(cmd *cobra.Command, args []string) {
 func create(path string){
 	CmdCreate := exec.Command("oc", "create", "-f",  path)
 	CmdCreateOut, err := CmdCreate.Output()
-	checkErrorMessage(err, "Error running create with path " + path)
+	if err != nil {
+		fmt.Println("Error creating " + path)
+	}
+	//checkErrorMessage(err, "Error running create with path " + path)
 	fmt.Println(string(CmdCreateOut))
 }
 
-
-/*func loginCluster(cluster, username, password string) {
-	username = "--username=" + username
-	password = "--password=" + password
-	CmdLogin := exec.Command("oc", "login", cluster, username, password)
-	CmdOut, err := CmdLogin.Output()
-	checkErrorMessage(err, "Error running login")
-	fmt.Println(string(CmdOut))
-}*/
-
-/*func changeProject(projectName string) {
-	CmdProject := exec.Command("oc", "project", projectName)
-	CmdProjectOut, err := CmdProject.Output()
-	checkErrorMessage(err, "Error running change project")
-	fmt.Println(string(CmdProjectOut))
-}
-
-func checkErrorMessage(err error, message string) {
-	if err != nil {
-		fmt.Println(message)
-		panic(err)
-	}
-} */
 
