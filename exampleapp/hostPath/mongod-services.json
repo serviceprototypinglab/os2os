@@ -1,0 +1,30 @@
+{
+  "kind": "Service",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "arkismongopersistent",
+    "namespace": "myproject",
+    "creationTimestamp": null,
+    "labels": {
+      "service": "arkismongopersistent"
+    }
+  },
+  "spec": {
+    "type": "NodePort",
+    "ports": [
+      {
+        "name": "arkismongopersistent",
+        "protocol": "TCP",
+        "port": 30011,
+        "targetPort": 27017,
+        "nodePort": 30011
+      }
+    ],
+    "selector": {
+      "service": "arkismongopersistent"
+    }
+  },
+  "status": {
+    "loadBalancer": {}
+  }
+}

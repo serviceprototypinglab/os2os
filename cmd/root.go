@@ -21,7 +21,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-var cfgFile, ClusterFrom, ClusterTo, ProjectFrom, ProjectTo, Path, UsernameFrom, UsernameTo,  PasswordFrom, PasswordTo string
+var cfgFile, ClusterFrom, ClusterTo, ProjectFrom, ProjectTo, Path, PathData, UsernameFrom, UsernameTo,  PasswordFrom, PasswordTo string
 var ObjectsOc []string
 
 /*var ObjectsOc = []string{"service", "buildconfig", "build", "configmap", "daemonset","daemonset","deployment",
@@ -40,7 +40,7 @@ var RootCmd = &cobra.Command{
 	Short: "Migrate your Openshift application between different Openshift clusters",
 	Long: `
 os2os is a tool for help you to migrate a Openshift project between different Openshift clusters.
-You will can download all your templates, convert and rigthsize the application to fix in the new cluster,
+You can download all your templates, convert and rigth size the application to fix in the new cluster,
 migrate the data, deploy your app in the new cluster and delete your project in the old cluster`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
@@ -72,6 +72,7 @@ func init() {
 	RootCmd.PersistentFlags().StringVarP(&PasswordFrom, "passwordFrom", "", "developer", "password in the cluster From")
 	RootCmd.PersistentFlags().StringVarP(&PasswordTo, "passwordTo", "", "developer", "password in the cluster To")
 	RootCmd.PersistentFlags().StringVarP(&Path, "path","", "./templates", "path where export the templates")
+	RootCmd.PersistentFlags().StringVarP(&PathData, "pathData","", "./volumes", "path where export the volumes")
 
 	defaultValue := []string{"default"}
 	RootCmd.PersistentFlags().StringArrayVarP(&ObjectsOc, "objects", "o", defaultValue, "list of objects to export" )
