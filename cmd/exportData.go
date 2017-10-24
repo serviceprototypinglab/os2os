@@ -20,6 +20,7 @@ import (
 	//"os/exec"
 	"encoding/json"
 	//"strings"
+	//"github.com/openshift/origin/test/extended/util/db"
 )
 
 // exportDataCmd represents the exportData command
@@ -123,7 +124,8 @@ func exportData(cmd *cobra.Command, args []string) {
 										os.Mkdir(pathVolume, os.FileMode(0777))
 										createJson(pathVolume, volumeName, podName, mountPath, rsName, deploymentName,
 											descriptionVolume, descriptionVolumeMount)
-										exportDataFromVolume(podName, pathVolume)
+										os.Mkdir(pathVolume + "/data", os.FileMode(0777))
+										exportDataFromVolume(podName, pathVolume, mountPath)
 									}
 								}
 							}
@@ -147,7 +149,9 @@ func getReplicaSet(pod string) string {
 	return "todo"
 }
 
-func exportDataFromVolume(pod string, path string) {
+func exportDataFromVolume(pod string, path string, mountPath string) {
+	a := "oc rsync " + pod + ":" + mountPath +  " " + path
+	fmt.Println(a)
 
 }
 
@@ -155,13 +159,13 @@ func createJson(pathVolume, volumeName, podName, mountPath, rsName, deploymentNa
 	descriptionVolume, descriptionVolumeMount map[string]interface{}){
 
 
-	m := make(map[string]string)
+	/*m := make(map[string]string)
 
 	m["pathVolume"] = pathVolume
 	fmt.Println(volumeName)
 	f, err3 := os.Create(pathVolume + "/data.json")
 	//Copy the json to a file
-	/*type DataJson struct {
+	type DataJson struct {
 		podName string
 	}
 
@@ -171,7 +175,7 @@ func createJson(pathVolume, volumeName, podName, mountPath, rsName, deploymentNa
 	fmt.Println(dataJson)
 	objectOs, err2 := json.Marshal(dataJson)
 	fmt.Println(err2)
-	fmt.Println(objectOs)*/
+	fmt.Println(objectOs)
 	objectOs, err2 := json.Marshal(m)
 	fmt.Println(err2)
 	if err3 != nil {
@@ -181,5 +185,6 @@ func createJson(pathVolume, volumeName, podName, mountPath, rsName, deploymentNa
 		//f.Write(dataJson)
 		f.Sync()
 		fmt.Println("Created  data.json in " + pathVolume)
-	}
+	}*/
+
 }
