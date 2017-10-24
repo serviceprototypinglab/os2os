@@ -1,6 +1,6 @@
 {
-  "kind": "Deployment",
-  "apiVersion": "extensions/v1beta1",
+  "kind": "DeploymentConfig",
+  "apiVersion": "v1",
   "metadata": {
     "name": "arkisdocument",
     "namespace": "myproject",

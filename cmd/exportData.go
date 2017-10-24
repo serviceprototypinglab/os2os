@@ -76,21 +76,21 @@ func exportData(cmd *cobra.Command, args []string) {
 	} else {
 		items := dat["items"].([]interface{})
 		if len(items) > 0 {
-
+			os.Mkdir(PathData, os.FileMode(0777))
 			//Take the name of the object
 			for i := range items {
-				var namePod string
+				var podName string
 				nameObjectOsAux, ok :=
 					items[i].(map[string]interface{})["metadata"].(map[string]interface{})["name"].(string)
 				if ok {
-					namePod = nameObjectOsAux
+					podName = nameObjectOsAux
 				} else {
-					namePod = typeObject + string(i)
+					podName = typeObject + string(i)
 
 				}
 				//Create a folder for each deployment
-				os.Mkdir(PathData+"/"+namePod, os.FileMode(0777))
-				//fmt.Println(namePod)
+				os.Mkdir(PathData+"/"+podName, os.FileMode(0777))
+				//fmt.Println(podName)
 				var volumeName string
 				volumesAux, ok :=
 					items[i].(map[string]interface{})["spec"].(map[string]interface{})["volumes"].([]interface{})
@@ -98,46 +98,88 @@ func exportData(cmd *cobra.Command, args []string) {
 					for j := range volumesAux {
 						volumeName = volumesAux[j].(map[string]interface{})["name"].(string)
 						//fmt.Println(volumeName)
-						descriptionVolume := volumesAux[j]
-						fmt.Println("-------")
+						descriptionVolume := volumesAux[j].(map[string]interface{})
 						//fmt.Println(descriptionVolume)
 						volumesMountAuxs, ok1 := items[i].(map[string]interface{})["spec"].(map[string]interface{})["containers"].([]interface{})
-						var volumesMountAux = volumesAux
 						for u := range volumesMountAuxs {
 							if ok1 {
 								volumesMountAux := volumesMountAuxs[u].(map[string]interface{})["volumeMounts"].([]interface{})
-								fmt.Println(volumesMountAux)
-							}
-
-						}
-						if ok1 {
-							 for k := range volumesMountAux {
-								nameVolumeMount := volumesMountAux[k].(map[string]interface{})["name"].(string)
-								if nameVolumeMount == volumeName {
-									fmt.Println("-----")
-									fmt.Println(volumeName)
-									fmt.Println(descriptionVolume)
-									descriptionVolumeMount := volumesMountAux[k].(map[string]interface{})
-									fmt.Println(descriptionVolumeMount)
-									fmt.Println(namePod)
-									mountPath := volumesMountAux[k].(map[string]interface{})["mountPath"].(string)
-									fmt.Println(mountPath)
+								for k := range volumesMountAux {
+									nameVolumeMount := volumesMountAux[k].(map[string]interface{})["name"].(string)
+									if nameVolumeMount == volumeName {
+										//fmt.Println("-----1------")
+										//fmt.Println(volumeName)
+										//fmt.Println(descriptionVolume)
+										descriptionVolumeMount := volumesMountAux[k].(map[string]interface{})
+										//fmt.Println(descriptionVolumeMount)
+										//fmt.Println(podName)
+										mountPath := volumesMountAux[k].(map[string]interface{})["mountPath"].(string)
+										//fmt.Println(mountPath)
+										rsName := getReplicaSet(podName)
+										deploymentName := getDeployment(podName)
+										//fmt.Println(rsName)
+										//fmt.Println(deploymentName)
+										pathVolume := PathData+"/"+podName + "/" + volumeName
+										os.Mkdir(pathVolume, os.FileMode(0777))
+										createJson(pathVolume, volumeName, podName, mountPath, rsName, deploymentName,
+											descriptionVolume, descriptionVolumeMount)
+										exportDataFromVolume(podName, pathVolume)
+									}
 								}
 							}
 						}
-
 					}
-				} else {
-					volumeName = ""
 				}
-
 			}
-		}else {
+		} else {
 			fmt.Println("No objects for the type " + typeObject)
 		}
-		fmt.Println("-----------")
+	}
+}
+
+//TODO
+func getDeployment(pod string) string {
+	return "todo"
+}
+
+//TODO
+func getReplicaSet(pod string) string {
+	return "todo"
+}
+
+func exportDataFromVolume(pod string, path string) {
+
+}
+
+func createJson(pathVolume, volumeName, podName, mountPath, rsName, deploymentName string,
+	descriptionVolume, descriptionVolumeMount map[string]interface{}){
+
+
+	m := make(map[string]string)
+
+	m["pathVolume"] = pathVolume
+	fmt.Println(volumeName)
+	f, err3 := os.Create(pathVolume + "/data.json")
+	//Copy the json to a file
+	/*type DataJson struct {
+		podName string
 	}
 
 
 
+	dataJson := DataJson{podName}
+	fmt.Println(dataJson)
+	objectOs, err2 := json.Marshal(dataJson)
+	fmt.Println(err2)
+	fmt.Println(objectOs)*/
+	objectOs, err2 := json.Marshal(m)
+	fmt.Println(err2)
+	if err3 != nil {
+		fmt.Println("Error creating data.json")
+	} else {
+		f.WriteString(string(objectOs))
+		//f.Write(dataJson)
+		f.Sync()
+		fmt.Println("Created  data.json in " + pathVolume)
+	}
 }
