@@ -19,7 +19,7 @@ import (
 	"os"
 	//"os/exec"
 	"encoding/json"
-	//"strings"
+	"strings"
 	//"github.com/openshift/origin/test/extended/util/db"
 )
 
@@ -116,8 +116,8 @@ func exportData(cmd *cobra.Command, args []string) {
 										//fmt.Println(podName)
 										mountPath := volumesMountAux[k].(map[string]interface{})["mountPath"].(string)
 										//fmt.Println(mountPath)
-										rsName := getReplicaSet(podName)
-										deploymentName := getDeployment(podName)
+										deploymentName, rsName := getDeploymentReplicaSet(podName)
+
 										//fmt.Println(rsName)
 										//fmt.Println(deploymentName)
 										pathVolume := PathData+"/"+podName + "/" + volumeName
@@ -140,14 +140,17 @@ func exportData(cmd *cobra.Command, args []string) {
 }
 
 //TODO
-func getDeployment(pod string) string {
-	return "todo"
+func getDeploymentReplicaSet(pod string) (string, string) {
+	auxString := strings.Split(pod, "-")
+	deploymentName := auxString[0]
+	replicaSetName := deploymentName + "-" + auxString[1]
+	fmt.Println(deploymentName)
+	fmt.Println(replicaSetName)
+
+	return deploymentName, replicaSetName
 }
 
-//TODO
-func getReplicaSet(pod string) string {
-	return "todo"
-}
+
 
 func exportDataFromVolume(pod string, path string, mountPath string) {
 	a := "oc rsync " + pod + ":" + mountPath +  " " + path
