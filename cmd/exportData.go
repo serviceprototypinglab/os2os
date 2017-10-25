@@ -17,7 +17,7 @@ import (
 	"fmt"
 	"github.com/spf13/cobra"
 	"os"
-	//"os/exec"
+	"os/exec"
 	"encoding/json"
 	"strings"
 	//"github.com/openshift/origin/test/extended/util/db"
@@ -64,9 +64,6 @@ func exportData(cmd *cobra.Command, args []string) {
 	var dat map[string]interface{}
 	typeObject := "pods"
 	typeString := getObjects(typeObject)
-
-	fmt.Println(typeString)
-
 	byt := []byte(typeString)
 	if err1 := json.Unmarshal(byt, &dat); err1 != nil {
 		fmt.Println("Error with the objects with type " + typeObject)
@@ -108,18 +105,9 @@ func exportData(cmd *cobra.Command, args []string) {
 								for k := range volumesMountAux {
 									nameVolumeMount := volumesMountAux[k].(map[string]interface{})["name"].(string)
 									if nameVolumeMount == volumeName {
-										//fmt.Println("-----1------")
-										//fmt.Println(volumeName)
-										//fmt.Println(descriptionVolume)
 										descriptionVolumeMount := volumesMountAux[k].(map[string]interface{})
-										//fmt.Println(descriptionVolumeMount)
-										//fmt.Println(podName)
 										mountPath := volumesMountAux[k].(map[string]interface{})["mountPath"].(string)
-										//fmt.Println(mountPath)
 										deploymentName, rsName := getDeploymentReplicaSet(podName)
-
-										//fmt.Println(rsName)
-										//fmt.Println(deploymentName)
 										pathVolume := PathData+"/"+podName + "/" + volumeName
 										os.Mkdir(pathVolume, os.FileMode(0777))
 										createJson(pathVolume, volumeName, podName, mountPath, rsName, deploymentName,
@@ -139,55 +127,58 @@ func exportData(cmd *cobra.Command, args []string) {
 	}
 }
 
-//TODO
 func getDeploymentReplicaSet(pod string) (string, string) {
 	auxString := strings.Split(pod, "-")
 	deploymentName := auxString[0]
 	replicaSetName := deploymentName + "-" + auxString[1]
-	fmt.Println(deploymentName)
-	fmt.Println(replicaSetName)
-
 	return deploymentName, replicaSetName
 }
 
 
 
 func exportDataFromVolume(pod string, path string, mountPath string) {
-	a := "oc rsync " + pod + ":" + mountPath +  " " + path
+	a := "oc rsync " + pod + ":" + mountPath +  " " + path + "/data"
 	fmt.Println(a)
-
+	cmdExportData := exec.Command("oc", "rsync", pod + ":" + mountPath, path + "/data")
+	cmdExportOut, err := cmdExportData.Output()
+	if err != nil {
+		fmt.Println("Error migrating " + a)
+		fmt.Println(err)
+	} else {
+		fmt.Println(string(cmdExportOut))
+	}
 }
 
 func createJson(pathVolume, volumeName, podName, mountPath, rsName, deploymentName string,
 	descriptionVolume, descriptionVolumeMount map[string]interface{}){
 
-
-	/*m := make(map[string]string)
-
+	var m map[string]interface{}
+	m = make(map[string]interface{})
 	m["pathVolume"] = pathVolume
-	fmt.Println(volumeName)
+	m["volumeName"] = volumeName
+	m["podName"] = podName
+	m["mountPath"] = mountPath
+	m["rsName"] = rsName
+	m["deploymentName"] = deploymentName
+	m["descriptionVolume"] = descriptionVolume
+	m["descriptionVolumeMount"] = descriptionVolumeMount
+
+
 	f, err3 := os.Create(pathVolume + "/data.json")
-	//Copy the json to a file
-	type DataJson struct {
-		podName string
-	}
 
-
-
-	dataJson := DataJson{podName}
-	fmt.Println(dataJson)
-	objectOs, err2 := json.Marshal(dataJson)
-	fmt.Println(err2)
-	fmt.Println(objectOs)
-	objectOs, err2 := json.Marshal(m)
-	fmt.Println(err2)
 	if err3 != nil {
 		fmt.Println("Error creating data.json")
+		fmt.Println(err3)
 	} else {
-		f.WriteString(string(objectOs))
-		//f.Write(dataJson)
-		f.Sync()
-		fmt.Println("Created  data.json in " + pathVolume)
-	}*/
+		objectOs, err2 := json.Marshal(m)
+		if err2 != nil {
+			fmt.Println("Error creating the json object")
 
+			fmt.Println(err2)
+		} else {
+			f.WriteString(string(objectOs))
+			f.Sync()
+			fmt.Println("Created  data.json in " + pathVolume)
+		}
+	}
 }
