@@ -87,7 +87,9 @@ func exportData(cmd *cobra.Command, args []string) {
 
 				}
 				//Create a folder for each deployment
-				os.Mkdir(PathData+"/"+podName, os.FileMode(0777))
+				deploymentName, rsName := getDeploymentReplicaSet(podName)
+				os.Mkdir(PathData+"/"+deploymentName, os.FileMode(0777))
+				os.Mkdir(PathData+"/"+deploymentName+"/"+podName, os.FileMode(0777))
 				//fmt.Println(podName)
 				var volumeName string
 				volumesAux, ok :=
@@ -107,8 +109,7 @@ func exportData(cmd *cobra.Command, args []string) {
 									if nameVolumeMount == volumeName {
 										descriptionVolumeMount := volumesMountAux[k].(map[string]interface{})
 										mountPath := volumesMountAux[k].(map[string]interface{})["mountPath"].(string)
-										deploymentName, rsName := getDeploymentReplicaSet(podName)
-										pathVolume := PathData+"/"+podName + "/" + volumeName
+										pathVolume := PathData+"/"+deploymentName+"/"+podName + "/" + volumeName
 										os.Mkdir(pathVolume, os.FileMode(0777))
 										createJson(pathVolume, volumeName, podName, mountPath, rsName, deploymentName,
 											descriptionVolume, descriptionVolumeMount)

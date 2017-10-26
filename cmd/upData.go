@@ -17,6 +17,8 @@ import (
 	"fmt"
 	"os/exec"
 	"github.com/spf13/cobra"
+	"log"
+	"path/filepath"
 )
 
 // upDataCmd represents the upData command
@@ -31,7 +33,8 @@ This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("upData called")
-		upData(cmd, args)
+		//upData(cmd, args)
+		listVolumesPods()
 	},
 }
 
@@ -51,7 +54,7 @@ func init() {
 
 
 func upData(cmd *cobra.Command, args []string) {
-	loginCluster(ClusterTo, UsernameFrom, PasswordFrom)
+	loginCluster(ClusterTo, UsernameTo, PasswordTo)
 
 	//Get pods from deployment
 	deploymentName := "A"
@@ -76,4 +79,13 @@ func upDataToVolume(podName, path, mountPath string) {
 	} else {
 		fmt.Println(string(cmdUpOut))
 	}
+}
+
+func listVolumesPods() {
+	files, err := filepath.Glob("./volumes/*")
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(files)
+
 }
