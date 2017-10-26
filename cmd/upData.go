@@ -19,6 +19,9 @@ import (
 	"github.com/spf13/cobra"
 	"log"
 	"path/filepath"
+	"os"
+	"encoding/json"
+	"strings"
 )
 
 // upDataCmd represents the upData command
@@ -33,8 +36,8 @@ This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("upData called")
-		//upData(cmd, args)
-		listVolumesPods()
+		upData(cmd, args)
+		//listVolumesPods()
 	},
 }
 
@@ -54,15 +57,88 @@ func init() {
 
 
 func upData(cmd *cobra.Command, args []string) {
-	loginCluster(ClusterTo, UsernameTo, PasswordTo)
 
-	//Get pods from deployment
-	deploymentName := "A"
-	//TODO GET ALL THE VOLUME TO MIGRATE
-	podName := getPodName(deploymentName)
-	//Copy the data there
-	upDataToVolume(podName, podName, podName)
+	loginCluster(ClusterTo, UsernameTo, PasswordTo)
+	os.Mkdir(PathData, os.FileMode(0777)) //All permision??
+	changeProject(ProjectFrom)
+
+	var dat map[string]interface{}
+	typeObject := "pods"
+	typeString := getObjects(typeObject)
+	byt := []byte(typeString)
+	if err1 := json.Unmarshal(byt, &dat); err1 != nil {
+		fmt.Println("Error with the objects with type " + typeObject)
+		fmt.Println("-------")
+		if typeString != "" {
+			fmt.Println(typeString)
+		}
+	} else {
+		items := dat["items"].([]interface{})
+		if len(items) > 0 {
+			//Take the name of the object
+			for i := range items {
+				var podName string
+				nameObjectOsAux, ok :=
+					items[i].(map[string]interface{})["metadata"].(map[string]interface{})["name"].(string)
+				if ok {
+					podName = nameObjectOsAux
+				} else {
+					podName = typeObject + string(i)
+
+				}
+				//Create a folder for each deployment
+				deploymentName, _ := getDeploymentReplicaSet(podName)
+
+				for _, v := range listDeployments() {
+					deployment := getDeploymentName(v)
+					if deployment == deploymentName {
+						for _, podName := range listPods(deploymentName) {
+
+							volumes := listVolumes(deploymentName+"/"+getPodNameFromPath(podName))
+							for _, volumePath := range volumes {
+								fmt.Println(volumePath)
+							}
+						}
+					}
+				}
+				//fmt.Println(podName)
+				/*var volumeName string
+				volumesAux, ok :=
+					items[i].(map[string]interface{})["spec"].(map[string]interface{})["volumes"].([]interface{})
+				if ok {
+					for j := range volumesAux {
+						volumeName = volumesAux[j].(map[string]interface{})["name"].(string)
+						//fmt.Println(volumeName)
+						descriptionVolume := volumesAux[j].(map[string]interface{})
+						//fmt.Println(descriptionVolume)
+						volumesMountAuxs, ok1 := items[i].(map[string]interface{})["spec"].(map[string]interface{})["containers"].([]interface{})
+						for u := range volumesMountAuxs {
+							if ok1 {
+								volumesMountAux := volumesMountAuxs[u].(map[string]interface{})["volumeMounts"].([]interface{})
+								for k := range volumesMountAux {
+									nameVolumeMount := volumesMountAux[k].(map[string]interface{})["name"].(string)
+									if nameVolumeMount == volumeName {
+										descriptionVolumeMount := volumesMountAux[k].(map[string]interface{})
+										mountPath := volumesMountAux[k].(map[string]interface{})["mountPath"].(string)
+										pathVolume := PathData+"/"+deploymentName+"/"+podName + "/" + volumeName
+										os.Mkdir(pathVolume, os.FileMode(0777))
+										createJson(pathVolume, volumeName, podName, mountPath, rsName, deploymentName,
+											descriptionVolume, descriptionVolumeMount)
+										os.Mkdir(pathVolume + "/data", os.FileMode(0777))
+										exportDataFromVolume(podName, pathVolume, mountPath)
+									}
+								}
+							}
+						}
+					}
+				}*/
+			}
+		} else {
+			fmt.Println("No objects for the type " + typeObject)
+		}
+	}
 }
+
 
 func getPodName(deploymentName string) string {
 	return deploymentName
@@ -81,11 +157,39 @@ func upDataToVolume(podName, path, mountPath string) {
 	}
 }
 
-func listVolumesPods() {
+func listPods(deploymentName string) []string{
+	files, err := filepath.Glob("./volumes/"+deploymentName+"/*")
+	if err != nil {
+		log.Fatal(err)
+	}
+	return files
+}
+
+func listVolumes(podpath string) []string{
+	files, err := filepath.Glob("./volumes/"+podpath+"/*")
+	if err != nil {
+		log.Fatal(err)
+	}
+	return files
+}
+
+func listDeployments() []string{
 	files, err := filepath.Glob("./volumes/*")
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println(files)
-
+	return files
 }
+
+func getDeploymentName(path string) string {
+	auxString := strings.Split(path, "/")
+	deploymentName := auxString[1]
+	return deploymentName
+}
+
+func getPodNameFromPath(path string) string {
+	auxString := strings.Split(path, "/")
+	deploymentName := auxString[2]
+	return deploymentName
+}
+
