@@ -59,8 +59,10 @@ func init() {
 func upData(cmd *cobra.Command, args []string) {
 
 	loginCluster(ClusterTo, UsernameTo, PasswordTo)
-	os.Mkdir(PathData, os.FileMode(0777)) //All permision??
-	changeProject(ProjectFrom)
+	os.Mkdir(PathData, os.FileMode(0777)) //All permission??
+	changeProject(ProjectTo)
+
+	//TAKE ARRAY DATA VOLUMES
 
 	var dat map[string]interface{}
 	typeObject := "pods"
@@ -79,7 +81,8 @@ func upData(cmd *cobra.Command, args []string) {
 			for i := range items {
 				var podName string
 				nameObjectOsAux, ok :=
-					items[i].(map[string]interface{})["metadata"].(map[string]interface{})["name"].(string)
+					items[i].(map[string]interface{})["metadata"].
+					(map[string]interface{})["name"].(string)
 				if ok {
 					podName = nameObjectOsAux
 				} else {
@@ -88,6 +91,8 @@ func upData(cmd *cobra.Command, args []string) {
 				}
 				//Create a folder for each deployment
 				deploymentName, _ := getDeploymentReplicaSet(podName)
+
+				//FIND DEPLOYMENT AND PROJECT NAME
 
 				for _, v := range listDeployments() {
 					deployment := getDeploymentName(v)
@@ -192,4 +197,3 @@ func getPodNameFromPath(path string) string {
 	deploymentName := auxString[2]
 	return deploymentName
 }
-

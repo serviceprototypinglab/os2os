@@ -11,6 +11,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+//TODO Create a json with the information of the volumes in ./volumes
+
 package cmd
 
 import (
@@ -53,7 +55,6 @@ func init() {
 	// exportDataCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
 
-
 func exportData(cmd *cobra.Command, args []string) {
 
 	//TODO change to clusterFrom
@@ -75,6 +76,9 @@ func exportData(cmd *cobra.Command, args []string) {
 		items := dat["items"].([]interface{})
 		if len(items) > 0 {
 			os.Mkdir(PathData, os.FileMode(0777))
+
+			var a [] map[string]interface{}
+
 			//Take the name of the object
 			for i := range items {
 				var podName string
@@ -111,8 +115,9 @@ func exportData(cmd *cobra.Command, args []string) {
 										mountPath := volumesMountAux[k].(map[string]interface{})["mountPath"].(string)
 										pathVolume := PathData+"/"+deploymentName+"/"+podName + "/" + volumeName
 										os.Mkdir(pathVolume, os.FileMode(0777))
-										createJson(pathVolume, volumeName, podName, mountPath, rsName, deploymentName,
+										aux := createJson(pathVolume, volumeName, podName, mountPath, rsName, deploymentName,
 											descriptionVolume, descriptionVolumeMount)
+										a = append(a, aux)
 										os.Mkdir(pathVolume + "/data", os.FileMode(0777))
 										exportDataFromVolume(podName, pathVolume, mountPath)
 									}
@@ -120,6 +125,22 @@ func exportData(cmd *cobra.Command, args []string) {
 							}
 						}
 					}
+				}
+			}
+			f, err3 := os.Create("./volumes/data.json")
+			if err3 != nil {
+				fmt.Println("Error creating data.json")
+				fmt.Println(err3)
+			} else {
+				objectOs, err2 := json.Marshal(a)
+				if err2 != nil {
+					fmt.Println("Error creating the json object")
+
+					fmt.Println(err2)
+				} else {
+					f.WriteString(string(objectOs))
+					f.Sync()
+					fmt.Println("Created  data.json in ./volumes")
 				}
 			}
 		} else {
@@ -135,8 +156,6 @@ func getDeploymentReplicaSet(pod string) (string, string) {
 	return deploymentName, replicaSetName
 }
 
-
-
 func exportDataFromVolume(pod string, path string, mountPath string) {
 	a := "oc rsync " + pod + ":" + mountPath +  " " + path + "/data"
 	fmt.Println(a)
@@ -151,7 +170,7 @@ func exportDataFromVolume(pod string, path string, mountPath string) {
 }
 
 func createJson(pathVolume, volumeName, podName, mountPath, rsName, deploymentName string,
-	descriptionVolume, descriptionVolumeMount map[string]interface{}){
+	descriptionVolume, descriptionVolumeMount map[string]interface{}) map[string]interface{} {
 
 	var m map[string]interface{}
 	m = make(map[string]interface{})
@@ -182,4 +201,6 @@ func createJson(pathVolume, volumeName, podName, mountPath, rsName, deploymentNa
 			fmt.Println("Created  data.json in " + pathVolume)
 		}
 	}
+
+	return m
 }
