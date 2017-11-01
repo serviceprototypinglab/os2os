@@ -22,6 +22,7 @@ import (
 	"os"
 	"encoding/json"
 	"strings"
+	"io/ioutil"
 )
 
 // upDataCmd represents the upData command
@@ -36,6 +37,7 @@ This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("upData called")
+
 		upData(cmd, args)
 		//listVolumesPods()
 	},
@@ -62,7 +64,8 @@ func upData(cmd *cobra.Command, args []string) {
 	os.Mkdir(PathData, os.FileMode(0777)) //All permission??
 	changeProject(ProjectTo)
 
-	//TAKE ARRAY DATA VOLUMES
+
+	data := readJsonData("./volumes")
 
 	var dat map[string]interface{}
 	typeObject := "pods"
@@ -93,7 +96,15 @@ func upData(cmd *cobra.Command, args []string) {
 				deploymentName, _ := getDeploymentReplicaSet(podName)
 
 				//FIND DEPLOYMENT AND PROJECT NAME
-
+				for _, a := range data {
+					if a["deploymentName"] == deploymentName {
+						path := "./volumes/" + deploymentName + "/" + a["podName"].(string) + "/" +
+							a["volumeName"].(string)
+						mountPath := a["mountPath"].(string)
+						upDataToVolume(podName, path, mountPath)
+					}
+				}
+			/*
 				for _, v := range listDeployments() {
 					deployment := getDeploymentName(v)
 					if deployment == deploymentName {
@@ -196,4 +207,15 @@ func getPodNameFromPath(path string) string {
 	auxString := strings.Split(path, "/")
 	deploymentName := auxString[2]
 	return deploymentName
+}
+
+func readJsonData(path string) []map[string]interface{} {
+	plan, _ := ioutil.ReadFile(path + "/data.json")
+	//var data []interface{}
+	var data []map[string]interface{}
+	err := json.Unmarshal(plan, &data)
+	if err != nil {
+		fmt.Println(err)
+	}
+	return data
 }
