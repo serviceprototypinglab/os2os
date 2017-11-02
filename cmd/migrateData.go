@@ -27,6 +27,7 @@ var migrateDataCmd = &cobra.Command{
 	Long: `migrate a persistant volume between the two OpenShift clusters`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("migrateData called")
+		migrateData(cmd, args)
 	},
 }
 
@@ -45,4 +46,11 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// migrateDataCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+}
+
+
+func migrateData(cmd *cobra.Command, args []string){
+	exportData(cmd, args)
+	upData(cmd, args)
+	downData(cmd, args)
 }

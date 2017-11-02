@@ -27,6 +27,7 @@ var migrateCmd = &cobra.Command{
 	Long: `All the steps in a full migration`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("migrate called")
+		migrate(cmd, args)
 	},
 }
 
@@ -42,4 +43,11 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// migrateCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+}
+
+
+func migrate(cmd *cobra.Command, args []string){
+	export(cmd, args)
+	up(cmd, args)
+	down(cmd, args)
 }

@@ -31,6 +31,7 @@ This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("downData called")
+		downData(cmd, args)
 	},
 }
 
@@ -46,4 +47,10 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// downDataCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+}
+
+
+func downData(cmd *cobra.Command, args []string) {
+	//TODO
+	fmt.Println("TODO down Data")
 }
