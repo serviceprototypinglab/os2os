@@ -58,7 +58,7 @@ func init() {
 func exportData(cmd *cobra.Command, args []string) {
 
 	//TODO change to clusterFrom
-	loginCluster(ClusterTo, UsernameFrom, PasswordFrom)
+	loginCluster(ClusterFrom, UsernameFrom, PasswordFrom)
 	os.Mkdir(PathData, os.FileMode(0777)) //All permision??
 	changeProject(ProjectFrom)
 
@@ -157,9 +157,9 @@ func getDeploymentReplicaSet(pod string) (string, string) {
 }
 
 func exportDataFromVolume(pod string, path string, mountPath string) {
-	a := "oc rsync " + pod + ":" + mountPath +  " " + path + "/data"
+	a := "oc rsync " + pod + ":" + mountPath + "/" +  " " + path + "/data"
 	fmt.Println(a)
-	cmdExportData := exec.Command("oc", "rsync", pod + ":" + mountPath, path + "/data")
+	cmdExportData := exec.Command("oc", "rsync", pod + ":" + mountPath + "/", path + "/data")
 	cmdExportOut, err := cmdExportData.Output()
 	if err != nil {
 		fmt.Println("Error migrating " + a)
@@ -183,7 +183,6 @@ func createJson(pathVolume, volumeName, podName, mountPath, rsName, deploymentNa
 	m["descriptionVolume"] = descriptionVolume
 	m["descriptionVolumeMount"] = descriptionVolumeMount
 
-
 	f, err3 := os.Create(pathVolume + "/data.json")
 
 	if err3 != nil {
@@ -193,7 +192,6 @@ func createJson(pathVolume, volumeName, podName, mountPath, rsName, deploymentNa
 		objectOs, err2 := json.Marshal(m)
 		if err2 != nil {
 			fmt.Println("Error creating the json object")
-
 			fmt.Println(err2)
 		} else {
 			f.WriteString(string(objectOs))
@@ -201,6 +199,5 @@ func createJson(pathVolume, volumeName, podName, mountPath, rsName, deploymentNa
 			fmt.Println("Created  data.json in " + pathVolume)
 		}
 	}
-
 	return m
 }

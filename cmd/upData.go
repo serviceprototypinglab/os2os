@@ -161,9 +161,9 @@ func getPodName(deploymentName string) string {
 }
 
 func upDataToVolume(podName, path, mountPath string) {
-	a := "oc rsync " +  path + "/data"  +  " " + podName + ":" + mountPath
+	a := "oc rsync " +  path + "/data/"  +  " " + podName + ":" + mountPath + "/"
 	fmt.Println(a)
-	cmdUpData := exec.Command("oc", "rsync", path + "/data", podName + ":" + mountPath)
+	cmdUpData := exec.Command("oc", "rsync", path + "/data/", podName + ":" + mountPath + "/")
 	cmdUpOut, err := cmdUpData.Output()
 	if err != nil {
 		fmt.Println("Error migrating " + a)

@@ -64,8 +64,8 @@ func init() {
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
 	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.os2os.yaml)")
-	RootCmd.PersistentFlags().StringVarP(&ClusterFrom, "clusterFrom", "", "https://127.0.0.1:8443", "Cluster where is the project that you want to migrate")
-	RootCmd.PersistentFlags().StringVarP(&ClusterTo, "clusterTo", "", "https://192.168.99.100:8443", "Cluster where you want to migrate the project")
+	RootCmd.PersistentFlags().StringVarP(&ClusterFrom, "clusterFrom", "", "https://192.168.99.100:8443", "Cluster where is the project that you want to migrate")
+	RootCmd.PersistentFlags().StringVarP(&ClusterTo, "clusterTo", "", "https://127.0.0.1:8443", "Cluster where you want to migrate the project")
 	RootCmd.PersistentFlags().StringVarP(&ProjectFrom, "projectFrom", "", "myproject", "name of the old Openshift project")
 	RootCmd.PersistentFlags().StringVarP(&ProjectTo, "projectTo", "", "myproject", "name of the new Openshift project")
 	RootCmd.PersistentFlags().StringVarP(&UsernameFrom, "usernameFrom", "", "developer", "username in the cluster From")
