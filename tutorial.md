@@ -1,5 +1,7 @@
 #os2os tutorial
 
+Note: This is slightly outdated and will be updated shortly, referencing the `exampleapp` folder.
+
 ## Prerequisites
 
 One cluster with a project.
