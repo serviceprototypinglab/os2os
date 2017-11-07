@@ -22,7 +22,19 @@ import (
 	"github.com/spf13/viper"
 )
 
-var cfgFile, ClusterFrom, ClusterTo, ProjectFrom, ProjectTo, Path, PathData, UsernameFrom, UsernameTo,  PasswordFrom, PasswordTo string
+var (
+	ClusterFrom  string
+	ClusterTo    string
+	ProjectFrom  string
+	ProjectTo    string
+	Path         string
+	PathData     string
+	UsernameFrom string
+	UsernameTo   string
+	PasswordFrom string
+	PasswordTo   string
+	cfgFile      string
+)
 var ObjectsOc []string
 
 /*var ObjectsOc = []string{"service", "buildconfig", "build", "configmap", "daemonset","daemonset","deployment",
@@ -79,8 +91,6 @@ func init() {
 	RootCmd.PersistentFlags().StringArrayVarP(&ObjectsOc, "objects", "o", defaultValue, "list of objects to export" )
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
-
-
 	RootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
 

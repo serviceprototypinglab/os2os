@@ -34,7 +34,11 @@ var downCmd = &cobra.Command{
 func down(cmd *cobra.Command, args []string) {
 	loginCluster(ClusterFrom, UsernameFrom, PasswordFrom)
 	changeProject(ProjectFrom)
+	fmt.Println("before")
+	fmt.Println(ObjectsOc)
 	ObjectsOc = getTypeObjects(ObjectsOc)
+	fmt.Println("after")
+	fmt.Println(ObjectsOc)
 	for _, typeObject := range ObjectsOc {
 		fullPath := Path + "/" + typeObject
 		delete(fullPath)

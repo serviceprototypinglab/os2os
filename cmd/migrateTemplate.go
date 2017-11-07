@@ -20,7 +20,7 @@ import (
 )
 
 // migrateTemplateCmd represents the migrateTemplate command
-var migrateTemplateCmd = &cobra.Comm{
+var migrateTemplateCmd = &cobra.Command{
 	Use:   "migrateTemplate",
 	Short: "A brief description of your command",
 	Long: `A longer description that spans multiple lines and likely contains examples

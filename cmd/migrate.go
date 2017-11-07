@@ -47,10 +47,24 @@ func init() {
 
 
 func migrate(cmd *cobra.Command, args []string){
+	fmt.Println("Starting the migration")
+	fmt.Println("1. Exporting the templates ...")
 	export(cmd, args)
+	fmt.Println("------------*---------------")
+	fmt.Println("2. Exporting the data ...")
 	exportData(cmd, args)
+	fmt.Println("------------*---------------")
+	fmt.Println("3. Creating the objects ...")
 	up(cmd, args)
+	fmt.Println("------------*---------------")
+	fmt.Println("4. Uploading the data ...")
 	upData(cmd, args)
+	fmt.Println("------------*---------------")
+	fmt.Println("5. Deleting the data ...")
 	downData(cmd, args)
+	fmt.Println("------------*---------------")
+	fmt.Println("6. Deleting the objects...")
 	down(cmd, args)
+	fmt.Println("------------*---------------")
+	fmt.Println("Finished the migration")
 }

@@ -64,9 +64,11 @@ func export(cmd *cobra.Command, args []string) {
 	} else {
 		ObjectsOc = strings.Split(ObjectsOc[0], ",")
 	}*/
-
+	fmt.Println("before")
+	fmt.Println(ObjectsOc)
 	ObjectsOc = getTypeObjects(ObjectsOc)
-
+	fmt.Println("after")
+	fmt.Println(ObjectsOc)
 	// Login in the cluster and change the project
 	loginCluster(ClusterFrom, UsernameFrom, PasswordFrom)
 	os.Mkdir(Path, os.FileMode(0777)) //All permision??
@@ -159,9 +161,9 @@ func changeProject(projectName string) {
 func getTypeObjects(ObjectsTypes []string) []string {
 	// List of type of objects to export
 	if len(ObjectsTypes) == 0 {
-		ObjectsTypes = []string{"service", "deployment", "secrets", "configmap", "job", "namespace"}
+		ObjectsTypes = []string{"service", "deployment", "secrets", "configmap", "job"}
 	} else if ObjectsTypes[0] == "default" {
-		ObjectsTypes = []string{"service", "deployment", "secrets", "configmap", "job", "namespace"}
+		ObjectsTypes = []string{"service", "deployment", "secrets", "configmap", "job"}
 	} else if ObjectsOc[0] == "all" {
 		ObjectsTypes = []string{"service", "buildconfig", "build", "configmap", "daemonset","daemonset",
 			"deployment", "deploymentconfig", "event","endpoints","horizontalpodautoscaler","imagestream",
@@ -169,7 +171,9 @@ func getTypeObjects(ObjectsTypes []string) []string {
 			"persistentvolumeclaim","policy","project","quota", "resourcequota","replicaset",
 			"replicationcontroller","rolebinding","route","secret","serviceaccount","service","user"}
 	} else {
-		ObjectsTypes = strings.Split(ObjectsTypes[0], ",")
+		if len(ObjectsTypes) == 1 {
+			ObjectsTypes = strings.Split(ObjectsTypes[0], ",")
+		}
 	}
 	return ObjectsTypes
 
