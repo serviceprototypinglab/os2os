@@ -99,16 +99,22 @@ func init() {
 	// when this action is called directly.
 	RootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 
+	viper.BindPFlag("config", RootCmd.PersistentFlags().Lookup("config"))
+	viper.BindPFlag("clusterFrom", RootCmd.PersistentFlags().Lookup("clusterFrom"))
+	viper.BindPFlag("ClusterTo", RootCmd.PersistentFlags().Lookup("ClusterTo"))
+	viper.BindPFlag("ProjectFrom", RootCmd.PersistentFlags().Lookup("ProjectFrom"))
+	viper.BindPFlag("ProjectTo", RootCmd.PersistentFlags().Lookup("ProjectTo"))
+	viper.BindPFlag("UsernameFrom", RootCmd.PersistentFlags().Lookup("UsernameFrom"))
+	viper.BindPFlag("UsernameTo", RootCmd.PersistentFlags().Lookup("UsernameTo"))
+	viper.BindPFlag("PasswordFrom", RootCmd.PersistentFlags().Lookup("PasswordFrom"))
+	viper.BindPFlag("PasswordTo", RootCmd.PersistentFlags().Lookup("PasswordTo"))
+	viper.BindPFlag("PathTemplate", RootCmd.PersistentFlags().Lookup("PathTemplate"))
+	viper.BindPFlag("PathData", RootCmd.PersistentFlags().Lookup("PathData"))
+	viper.BindPFlag("ObjectsOc", RootCmd.PersistentFlags().Lookup("ObjectsOc"))
+
+	fmt.Println(viper.AllKeys())
 
 
-	viper.BindPFlag("pathTemplate", RootCmd.PersistentFlags().Lookup("pathtemplate"))
-	//viper.BindPFlag("author", RootCmd.PersistentFlags().Lookup("pathData"))
-	fmt.Println(PathTemplate)
-	fmt.Println(PathData)
-
-	//a := viper.GetString("pathData")
-	//fmt.Println(a)
-	fmt.Println("3333")
 
 }
 
@@ -135,9 +141,38 @@ func initConfig() {
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err == nil {
 		fmt.Println("Using config file:", viper.ConfigFileUsed())
+		initParametersFromConfigFile()
+
 	} else {
 		fmt.Println("Error reading config file")
 	}
+}
 
-
+func initParametersFromConfigFile() {
+	for _, keyConfig := range viper.AllKeys() {
+		switch keyConfig {
+		case "pathtemplate":
+			PathTemplate = viper.GetString(keyConfig)
+		case "pathdata":
+			PathData = viper.GetString(keyConfig)
+		case "clusterto":
+			ClusterTo = viper.GetString(keyConfig)
+		case "clusterfrom":
+			ClusterFrom = viper.GetString(keyConfig)
+		case "projectto":
+			ProjectTo = viper.GetString(keyConfig)
+		case "projectfrom":
+			ProjectFrom = viper.GetString(keyConfig)
+		case "usernamefrom":
+			UsernameFrom = viper.GetString(keyConfig)
+		case "usernameto":
+			UsernameTo = viper.GetString(keyConfig)
+		case "passwordfrom":
+			PasswordFrom = viper.GetString(keyConfig)
+		case "passwordto":
+			PasswordTo = viper.GetString(keyConfig)
+		case "objectsoc":
+			ObjectsOc = viper.GetStringSlice(keyConfig)
+		}
+	}
 }
