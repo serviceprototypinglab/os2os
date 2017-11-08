@@ -57,7 +57,7 @@ func up(cmd *cobra.Command, args []string) {
 
 	for _, typeObject := range ObjectsOc {
 		fmt.Println(typeObject)
-		fullPath := Path + "/" + typeObject
+		fullPath := PathTemplate + "/" + typeObject
 		create(fullPath)
 	}
 }

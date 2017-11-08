@@ -71,7 +71,8 @@ func export(cmd *cobra.Command, args []string) {
 	fmt.Println(ObjectsOc)
 	// Login in the cluster and change the project
 	loginCluster(ClusterFrom, UsernameFrom, PasswordFrom)
-	os.Mkdir(Path, os.FileMode(0777)) //All permision??
+	fmt.Println(PathTemplate)
+	os.Mkdir(PathTemplate, os.FileMode(0777)) //All permision??
 	changeProject(ProjectFrom)
 
 	for _, typeObject := range ObjectsOc {
@@ -91,7 +92,7 @@ func export(cmd *cobra.Command, args []string) {
 			items := dat["items"].([]interface{})
 			if len(items) > 0 {
 				//Create a folder for each type
-				os.Mkdir(Path+"/"+typeObject, os.FileMode(0777))
+				os.Mkdir(PathTemplate+"/"+typeObject, os.FileMode(0777))
 				//Take the name of the object
 				for i := range items {
 					var nameObjectOs string
@@ -110,7 +111,7 @@ func export(cmd *cobra.Command, args []string) {
 					if err2 != nil {
 						fmt.Println("Error parsing json for the "  + typeObject + " called " + nameObjectOs)
 					} else {
-						f, err3 := os.Create(Path + "/" + typeObject + "/" + nameObjectOs + ".json")
+						f, err3 := os.Create(PathTemplate + "/" + typeObject + "/" + nameObjectOs + ".json")
 						//checkError(err)
 						if err3 != nil {
 							fmt.Println("Error with the " + typeObject + " called " + nameObjectOs)
@@ -200,7 +201,7 @@ func export1(cmd *cobra.Command, args []string) {
 
 
 	loginCluster(ClusterFrom, UsernameFrom, PasswordFrom)
-	os.Mkdir(Path, os.FileMode(0777)) //All permision??
+	os.Mkdir(PathTemplate, os.FileMode(0777)) //All permision??
 	changeProject(ProjectFrom)
 	//TODO Do it for all the objects.
 
@@ -214,7 +215,7 @@ func export1(cmd *cobra.Command, args []string) {
 		typeString := getObjects(typeObject)
 		if typeString != "" {
 			//Create a folder for each resource
-			os.Mkdir(Path+"/"+typeObject, os.FileMode(0777))
+			os.Mkdir(PathTemplate+"/"+typeObject, os.FileMode(0777))
 			//Take all the names of the resource
 			namesDeployments := filterTableFirstColumn(typeString)
 			for _, v := range namesDeployments {
@@ -260,7 +261,7 @@ func exportObject(typeObject, nameObject string) {
 		return
 	}
 	//checkError(err)
-	f, err := os.Create(Path+"/"+typeObject+"/"+ nameObject+".json")
+	f, err := os.Create(PathTemplate+"/"+typeObject+"/"+ nameObject+".json")
 	//checkError(err)
 	if err != nil {
 		fmt.Println("Error with the object " + typeObject + " called " + nameObject)

@@ -40,7 +40,7 @@ func down(cmd *cobra.Command, args []string) {
 	fmt.Println("after")
 	fmt.Println(ObjectsOc)
 	for _, typeObject := range ObjectsOc {
-		fullPath := Path + "/" + typeObject
+		fullPath := PathTemplate + "/" + typeObject
 		delete(fullPath)
 	}
 }

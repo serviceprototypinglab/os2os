@@ -27,7 +27,7 @@ var (
 	ClusterTo    string
 	ProjectFrom  string
 	ProjectTo    string
-	Path         string
+	PathTemplate string
 	PathData     string
 	UsernameFrom string
 	UsernameTo   string
@@ -72,6 +72,13 @@ func Execute() {
 func init() {
 	cobra.OnInitialize(initConfig)
 
+	/*
+	  TODO Read config file and set the default value if exits:
+	  TODO using the config file value
+	  TODO in other case:
+	  TODO using a hardcoder value */
+
+	//fmt.Println(viper.AllKeys())
 	// Here you will define your flags and configuration settings.
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
@@ -84,14 +91,25 @@ func init() {
 	RootCmd.PersistentFlags().StringVarP(&UsernameTo, "usernameTo", "", "developer", "username in the cluster To")
 	RootCmd.PersistentFlags().StringVarP(&PasswordFrom, "passwordFrom", "", "developer", "password in the cluster From")
 	RootCmd.PersistentFlags().StringVarP(&PasswordTo, "passwordTo", "", "developer", "password in the cluster To")
-	RootCmd.PersistentFlags().StringVarP(&Path, "path","", "./templates", "path where export the templates")
+	RootCmd.PersistentFlags().StringVarP(&PathTemplate, "pathTemplate","", "./templates", "path where export the templates")
 	RootCmd.PersistentFlags().StringVarP(&PathData, "pathData","", "./volumes", "path where export the volumes")
-
 	defaultValue := []string{"default"}
 	RootCmd.PersistentFlags().StringArrayVarP(&ObjectsOc, "objects", "o", defaultValue, "list of objects to export" )
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
 	RootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+
+
+
+	viper.BindPFlag("pathTemplate", RootCmd.PersistentFlags().Lookup("pathtemplate"))
+	//viper.BindPFlag("author", RootCmd.PersistentFlags().Lookup("pathData"))
+	fmt.Println(PathTemplate)
+	fmt.Println(PathData)
+
+	//a := viper.GetString("pathData")
+	//fmt.Println(a)
+	fmt.Println("3333")
+
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -117,5 +135,9 @@ func initConfig() {
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err == nil {
 		fmt.Println("Using config file:", viper.ConfigFileUsed())
+	} else {
+		fmt.Println("Error reading config file")
 	}
+
+
 }

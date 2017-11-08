@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//TODO Create a json with the information of the volumes in ./volumes
+//TODO Create a json with the information of the volumes in PathData" +
 
 package cmd
 
@@ -127,7 +127,7 @@ func exportData(cmd *cobra.Command, args []string) {
 					}
 				}
 			}
-			f, err3 := os.Create("./volumes/data.json")
+			f, err3 := os.Create(PathData +"/data.json")
 			if err3 != nil {
 				fmt.Println("Error creating data.json")
 				fmt.Println(err3)
@@ -140,7 +140,7 @@ func exportData(cmd *cobra.Command, args []string) {
 				} else {
 					f.WriteString(string(objectOs))
 					f.Sync()
-					fmt.Println("Created  data.json in ./volumes")
+					fmt.Println("Created  data.json in" + PathData )
 				}
 			}
 		} else {
