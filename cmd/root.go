@@ -77,7 +77,7 @@ func init() {
 	  TODO using the config file value
 	  TODO in other case:
 	  TODO using a hardcoder value */
-
+	initConfig()
 	//fmt.Println(viper.AllKeys())
 	// Here you will define your flags and configuration settings.
 	// Cobra supports persistent flags, which, if defined here,
@@ -99,6 +99,9 @@ func init() {
 	// when this action is called directly.
 	RootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 
+	viper.BindPFlag("PathTemplate", RootCmd.PersistentFlags().Lookup("PathTemplate"))
+
+	/*
 	viper.BindPFlag("config", RootCmd.PersistentFlags().Lookup("config"))
 	viper.BindPFlag("clusterFrom", RootCmd.PersistentFlags().Lookup("clusterFrom"))
 	viper.BindPFlag("ClusterTo", RootCmd.PersistentFlags().Lookup("ClusterTo"))
@@ -111,11 +114,9 @@ func init() {
 	viper.BindPFlag("PathTemplate", RootCmd.PersistentFlags().Lookup("PathTemplate"))
 	viper.BindPFlag("PathData", RootCmd.PersistentFlags().Lookup("PathData"))
 	viper.BindPFlag("ObjectsOc", RootCmd.PersistentFlags().Lookup("ObjectsOc"))
+	*/
 
 	fmt.Println(viper.AllKeys())
-
-
-
 }
 
 // initConfig reads in config file and ENV variables if set.
