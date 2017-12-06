@@ -21,6 +21,7 @@ import (
 	"os/exec"
 	"strings"
 	"os"
+	//"github.com/spf13/viper"
 )
 
 // exportCmd represents the export command
@@ -50,6 +51,8 @@ func init() {
 
 func export(cmd *cobra.Command, args []string) {
 
+
+	//initParametersFromConfigFile()
 	// List of type of objects to export
 	/*	if len(ObjectsOc) == 0 {
 		ObjectsOc = []string{"service", "deployment", "secrets", "configmap", "job", "namespace"}
@@ -64,14 +67,24 @@ func export(cmd *cobra.Command, args []string) {
 	} else {
 		ObjectsOc = strings.Split(ObjectsOc[0], ",")
 	}*/
-	fmt.Println("before")
-	fmt.Println(ObjectsOc)
-	ObjectsOc = getTypeObjects(ObjectsOc)
-	fmt.Println("after")
-	fmt.Println(ObjectsOc)
-	// Login in the cluster and change the project
+
+	fmt.Println("init parameter")
+	//initParametersFromConfigFile()
+	//GET FLAGS
+	//fmt.Println("cmd")
+	//fmt.Println(cmd)
+	//fmt.Println("args")
+	//fmt.Println(args)
+	//PathTemplate =
+	//fmt.Println(viper.AllKeys())
+	//fmt.Println(viper.Get("pathtemplate"))
+	//fmt.Println(viper.GetString("pathtemplate"))
+
+	getAllValue()
+
+	fmt.Println("Cluster from ---->")
+	fmt.Println(ClusterFrom)
 	loginCluster(ClusterFrom, UsernameFrom, PasswordFrom)
-	fmt.Println(PathTemplate)
 	os.Mkdir(PathTemplate, os.FileMode(0777)) //All permision??
 	changeProject(ProjectFrom)
 
@@ -190,15 +203,17 @@ func checkError(err error) {
 
 func checkErrorMessage(err error, message string){
 	if err != nil {
+
 		fmt.Println(message)
-		panic(err)
+		//panic(err)
+		fmt.Println(err)
+		fmt.Println("Error managed by checkErrorMessage")
 	}
 }
 
 // ALL METHODS
 
 func export1(cmd *cobra.Command, args []string) {
-
 
 	loginCluster(ClusterFrom, UsernameFrom, PasswordFrom)
 	os.Mkdir(PathTemplate, os.FileMode(0777)) //All permision??

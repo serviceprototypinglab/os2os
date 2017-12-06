@@ -60,6 +60,7 @@ func init() {
 
 func upData(cmd *cobra.Command, args []string) {
 
+	getAllValue()
 	loginCluster(ClusterTo, UsernameTo, PasswordTo)
 	os.Mkdir(PathData, os.FileMode(0777)) //All permission??
 	changeProject(ProjectTo)

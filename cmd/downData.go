@@ -55,5 +55,6 @@ func init() {
 
 func downData(cmd *cobra.Command, args []string) {
 	//TODO
+	getAllValue()
 	fmt.Println("TODO down Data")
 }

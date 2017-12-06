@@ -46,7 +46,7 @@ func init() {
 
 func up(cmd *cobra.Command, args []string) {
 
-
+	getAllValue()
 	loginCluster(ClusterTo, UsernameTo, PasswordTo)
 	changeProject(ProjectTo)
 	fmt.Println("before")

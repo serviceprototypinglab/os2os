@@ -57,7 +57,8 @@ func init() {
 
 func exportData(cmd *cobra.Command, args []string) {
 
-	//TODO change to clusterFrom
+
+	getAllValue()
 	loginCluster(ClusterFrom, UsernameFrom, PasswordFrom)
 	os.Mkdir(PathData, os.FileMode(0777)) //All permision??
 	changeProject(ProjectFrom)

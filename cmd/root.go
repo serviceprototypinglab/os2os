@@ -72,38 +72,38 @@ func Execute() {
 func init() {
 	cobra.OnInitialize(initConfig)
 
-	/*
-	  TODO Read config file and set the default value if exits:
-	  TODO using the config file value
-	  TODO in other case:
-	  TODO using a hardcoder value */
-	initConfig()
+	RootCmd.PersistentFlags().StringVar(&cfgFile, "config","", "config file (default is $HOME/.os2os.yaml)")
+
+
+	//initConfig()
 	//fmt.Println(viper.AllKeys())
 	// Here you will define your flags and configuration settings.
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
-	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.os2os.yaml)")
-	RootCmd.PersistentFlags().StringVarP(&ClusterFrom, "clusterFrom", "", "https://192.168.99.100:8443", "Cluster where is the project that you want to migrate")
-	RootCmd.PersistentFlags().StringVarP(&ClusterTo, "clusterTo", "", "https://127.0.0.1:8443", "Cluster where you want to migrate the project")
-	RootCmd.PersistentFlags().StringVarP(&ProjectFrom, "projectFrom", "", "myproject", "name of the old Openshift project")
-	RootCmd.PersistentFlags().StringVarP(&ProjectTo, "projectTo", "", "myproject", "name of the new Openshift project")
-	RootCmd.PersistentFlags().StringVarP(&UsernameFrom, "usernameFrom", "", "developer", "username in the cluster From")
-	RootCmd.PersistentFlags().StringVarP(&UsernameTo, "usernameTo", "", "developer", "username in the cluster To")
-	RootCmd.PersistentFlags().StringVarP(&PasswordFrom, "passwordFrom", "", "developer", "password in the cluster From")
-	RootCmd.PersistentFlags().StringVarP(&PasswordTo, "passwordTo", "", "developer", "password in the cluster To")
-	RootCmd.PersistentFlags().StringVarP(&PathTemplate, "pathTemplate","", "./templates", "path where export the templates")
-	RootCmd.PersistentFlags().StringVarP(&PathData, "pathData","", "./volumes", "path where export the volumes")
-	defaultValue := []string{"default"}
+	//RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.os2os.yaml)")
+
+	//RootCmd.PersistentFlags().StringVar(&cfgFile, "config","/Users/manuel/.os2os.yaml", "config file (default is $HOME/.os2os.yaml)")
+	RootCmd.PersistentFlags().StringVarP(&ClusterFrom, "clusterFrom", "", "", "Cluster where is the project that you want to migrate")
+	RootCmd.PersistentFlags().StringVarP(&ClusterTo, "clusterTo", "", "", "Cluster where you want to migrate the project")
+	RootCmd.PersistentFlags().StringVarP(&ProjectFrom, "projectFrom", "", "", "name of the old Openshift project")
+	RootCmd.PersistentFlags().StringVarP(&ProjectTo, "projectTo", "", "", "name of the new Openshift project")
+	RootCmd.PersistentFlags().StringVarP(&UsernameFrom, "usernameFrom", "", "", "username in the cluster From")
+	RootCmd.PersistentFlags().StringVarP(&UsernameTo, "usernameTo", "", "", "username in the cluster To")
+	RootCmd.PersistentFlags().StringVarP(&PasswordFrom, "passwordFrom", "", "", "password in the cluster From")
+	RootCmd.PersistentFlags().StringVarP(&PasswordTo, "passwordTo", "", "", "password in the cluster To")
+	RootCmd.PersistentFlags().StringVarP(&PathTemplate, "pathTemplate","","", "path where export the templates")
+	RootCmd.PersistentFlags().StringVarP(&PathData, "pathData","", "", "path where export the volumes")
+	defaultValue := []string{""}
 	RootCmd.PersistentFlags().StringArrayVarP(&ObjectsOc, "objects", "o", defaultValue, "list of objects to export" )
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
-	RootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	//RootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 
-	viper.BindPFlag("PathTemplate", RootCmd.PersistentFlags().Lookup("PathTemplate"))
 
-	/*
-	viper.BindPFlag("config", RootCmd.PersistentFlags().Lookup("config"))
-	viper.BindPFlag("clusterFrom", RootCmd.PersistentFlags().Lookup("clusterFrom"))
+	//fmt.Println(viper.AllKeys())
+/*
+	viper.BindPFlag("pathtemplate", RootCmd.PersistentFlags().Lookup("pathtemplate"))
+	viper.BindPFlag("ClusterFrom", RootCmd.PersistentFlags().Lookup("ClusterFrom"))
 	viper.BindPFlag("ClusterTo", RootCmd.PersistentFlags().Lookup("ClusterTo"))
 	viper.BindPFlag("ProjectFrom", RootCmd.PersistentFlags().Lookup("ProjectFrom"))
 	viper.BindPFlag("ProjectTo", RootCmd.PersistentFlags().Lookup("ProjectTo"))
@@ -111,12 +111,15 @@ func init() {
 	viper.BindPFlag("UsernameTo", RootCmd.PersistentFlags().Lookup("UsernameTo"))
 	viper.BindPFlag("PasswordFrom", RootCmd.PersistentFlags().Lookup("PasswordFrom"))
 	viper.BindPFlag("PasswordTo", RootCmd.PersistentFlags().Lookup("PasswordTo"))
-	viper.BindPFlag("PathTemplate", RootCmd.PersistentFlags().Lookup("PathTemplate"))
 	viper.BindPFlag("PathData", RootCmd.PersistentFlags().Lookup("PathData"))
 	viper.BindPFlag("ObjectsOc", RootCmd.PersistentFlags().Lookup("ObjectsOc"))
-	*/
+*/
+	//RootCmd.PersistentFlags().StringVarP(&projectBase, "projectbase", "b", "", "base project directory eg. github.com/spf13/")
+	//viper.BindPFlag("projectbase", RootCmd.PersistentFlags().Lookup("projectbase"))
 
-	fmt.Println(viper.AllKeys())
+
+	//fmt.Println(viper.AllKeys())
+
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -131,26 +134,28 @@ func initConfig() {
 			fmt.Println(err)
 			os.Exit(1)
 		}
-
 		// Search config in home directory with name ".os2os" (without extension).
 		viper.AddConfigPath(home)
 		viper.SetConfigName(".os2os")
 	}
-
 	viper.AutomaticEnv() // read in environment variables that match
-
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err == nil {
 		fmt.Println("Using config file:", viper.ConfigFileUsed())
-		initParametersFromConfigFile()
+		//initParametersFromConfigFile()
 
 	} else {
 		fmt.Println("Error reading config file")
+		fmt.Print(err)
 	}
 }
 
 func initParametersFromConfigFile() {
 	for _, keyConfig := range viper.AllKeys() {
+		//fmt.Println("-------")
+		//fmt.Println(keyConfig)
+		//fmt.Println(viper.GetString(keyConfig))
+
 		switch keyConfig {
 		case "pathtemplate":
 			PathTemplate = viper.GetString(keyConfig)
@@ -174,6 +179,93 @@ func initParametersFromConfigFile() {
 			PasswordTo = viper.GetString(keyConfig)
 		case "objectsoc":
 			ObjectsOc = viper.GetStringSlice(keyConfig)
+		}
+	}
+}
+
+func initComplete() {
+	initConfig()
+	initParametersFromConfigFile()
+}
+
+func getValueFromConfig(s string) interface{} {
+	home, err := homedir.Dir()
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	viper.AddConfigPath(home)
+	viper.SetConfigName(".os2os")
+
+	if err := viper.ReadInConfig(); err == nil {
+		//fmt.Println("Using config file:", viper.ConfigFileUsed())
+		value := viper.Get(s)
+		if value != nil {
+			return value
+		}
+	}
+	return ""
+}
+
+
+func getAllValue(){
+	keys := []string{"pathtemplate","pathdata","objects","clusterto", "clusterfrom","projectto", "projectfrom",
+	"usernamefrom", "usernameto", "passwordfrom", "passwordto"}
+	for _, keyConfig := range keys {
+		//fmt.Println("-------")
+		//fmt.Println(keyConfig)
+		//fmt.Println(viper.GetString(keyConfig))
+
+		switch keyConfig {
+		case "pathtemplate":
+			if PathTemplate == ""{
+				PathTemplate = getValueFromConfig("PathTemplate").(string)
+			}
+		case "pathdata":
+			if PathData == ""{
+				PathData = getValueFromConfig("PathData").(string)
+			}
+		case "clusterto":
+			if ClusterTo == ""{
+				ClusterTo = getValueFromConfig("ClusterTo").(string)
+			}
+			//ClusterTo = viper.GetString(keyConfig)
+		case "clusterfrom":
+			if ClusterFrom == ""{
+				ClusterFrom = getValueFromConfig("ClusterFrom").(string)
+			}
+			//ClusterFrom = viper.GetString(keyConfig)
+		case "projectto":
+			if ProjectTo == ""{
+				ProjectTo = getValueFromConfig("ProjectTo").(string)
+			}
+			//ProjectTo = viper.GetString(keyConfig)
+		case "projectfrom":
+			if ProjectFrom == ""{
+				ProjectFrom = getValueFromConfig("ProjectFrom").(string)
+			}
+		case "usernamefrom":
+			if UsernameFrom == ""{
+				UsernameFrom = getValueFromConfig("UsernameFrom").(string)
+			}
+		case "usernameto":
+			if UsernameTo == ""{
+				UsernameTo = getValueFromConfig("UsernameTo").(string)
+			}
+		case "passwordfrom":
+			if PasswordFrom == ""{
+				PasswordFrom = getValueFromConfig("PasswordFrom").(string)
+			}
+		case "passwordto":
+			if PasswordTo == ""{
+				PasswordTo = getValueFromConfig("PasswordTo").(string)
+			}
+		case "objects":
+			if ObjectsOc[0] == "" {
+				ObjectsOc = []string{getValueFromConfig("objects").(string)}
+				ObjectsOc = getTypeObjects(ObjectsOc)
+				fmt.Println(ObjectsOc)
+			}
 		}
 	}
 }
