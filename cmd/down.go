@@ -33,6 +33,7 @@ var downCmd = &cobra.Command{
 
 func down(cmd *cobra.Command, args []string) {
 	getAllValue()
+	PathTemplate = PathTemplate + "/" + ProjectFrom
 	loginCluster(ClusterFrom, UsernameFrom, PasswordFrom)
 	changeProject(ProjectFrom)
 	fmt.Println("before")

@@ -20,7 +20,7 @@
       }
     ],
     "selector": {
-      "service": "arkisdocument"
+      "service": "arkisdocument1"
     },
     "type": "NodePort"
   }

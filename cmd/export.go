@@ -81,11 +81,12 @@ func export(cmd *cobra.Command, args []string) {
 	//fmt.Println(viper.GetString("pathtemplate"))
 
 	getAllValue()
-
+	os.Mkdir(PathTemplate, os.FileMode(0777))
+	PathTemplate += "/" + ProjectFrom
+	os.Mkdir(PathTemplate, os.FileMode(0777))
 	fmt.Println("Cluster from ---->")
 	fmt.Println(ClusterFrom)
 	loginCluster(ClusterFrom, UsernameFrom, PasswordFrom)
-	os.Mkdir(PathTemplate, os.FileMode(0777)) //All permision??
 	changeProject(ProjectFrom)
 
 	for _, typeObject := range ObjectsOc {
@@ -94,6 +95,7 @@ func export(cmd *cobra.Command, args []string) {
 
 		//Get all the objects for the type: typeObject and parse to json
 		typeString := getObjects(typeObject)
+		//fmt.Println(typeString)
 		byt := []byte(typeString)
 		if err1 := json.Unmarshal(byt, &dat); err1 != nil {
 			fmt.Println("Error with the objects with type " + typeObject)
@@ -105,7 +107,10 @@ func export(cmd *cobra.Command, args []string) {
 			items := dat["items"].([]interface{})
 			if len(items) > 0 {
 				//Create a folder for each type
+				fmt.Println("creating")
+				fmt.Println(PathTemplate)
 				os.Mkdir(PathTemplate+"/"+typeObject, os.FileMode(0777))
+				fmt.Println("created")
 				//Take the name of the object
 				for i := range items {
 					var nameObjectOs string
@@ -117,7 +122,6 @@ func export(cmd *cobra.Command, args []string) {
 						nameObjectOs = typeObject + string(i)
 
 					}
-
 					//Copy the json to a file
 					objectOs, err2 := json.Marshal(items[i])
 
@@ -159,7 +163,8 @@ func getObjects(typeObject string) string {
 func loginCluster(cluster, username, password string) {
 	username = "--username=" + username
 	password = "--password=" + password
-	CmdLogin := exec.Command("oc", "login", cluster, username, password)
+	//CmdLogin := exec.Command("oc", "login", cluster, username, password)
+	CmdLogin := exec.Command("oc", "login", cluster, "-u", "system:admin")
 	CmdOut, err := CmdLogin.Output()
 	checkErrorMessage(err, "Error running login")
 	fmt.Println(string(CmdOut))

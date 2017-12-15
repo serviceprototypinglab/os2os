@@ -17,6 +17,9 @@ package cmd
 import (
 	"fmt"
 	"github.com/spf13/cobra"
+	"io/ioutil"
+	"os"
+	"encoding/json"
 )
 
 // convertCmd represents the convert command
@@ -26,6 +29,7 @@ var convertCmd = &cobra.Command{
 	Long: `Convert your template to adapt to your new cluster.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("convert called")
+		convert()
 	},
 }
 
@@ -41,4 +45,71 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// convertCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+}
+
+func convert(){
+	getAllValue()
+	convert_project()
+}
+
+func convert_project() {
+
+	if ProjectFrom == ProjectTo {
+		fmt.Println("Same project")
+	} else {
+		PathTemplateTo := PathTemplate + "/" + ProjectTo
+		os.Mkdir(PathTemplateTo, os.FileMode(0777))
+
+		PathTemplate += "/" + ProjectFrom
+
+
+		ObjectsOc = getTypeObjects(ObjectsOc)
+		for _, object := range ObjectsOc {
+			//fmt.Println(object)
+			files, err := ioutil.ReadDir(PathTemplate + "/" + object)
+			if err != nil {
+				fmt.Println("not " + PathTemplate + "/" + object)
+			}
+			os.Mkdir(PathTemplateTo + "/" + object, os.FileMode(0777))
+			for _, f := range files {
+
+				fmt.Println(f.Name())
+				//metadata.namespace = projectTo
+				file, e := ioutil.ReadFile(PathTemplate + "/" + object + "/" + f.Name())
+				if e != nil {
+					fmt.Printf("File error: %v\n", e)
+					os.Exit(1)
+				}
+				typeString := string(file)
+				//fmt.Printf("%s\n", string(file))
+				byt := []byte(string(file))
+				var dat map[string]interface{}
+				if err1 := json.Unmarshal(byt, &dat); err1 != nil {
+					fmt.Println("Error with the objects with type " + object)
+					fmt.Println("-------")
+					if typeString != "" {
+						fmt.Println(typeString)
+					}
+				} else {
+					dat["metadata"].(map[string]interface{})["namespace"] = ProjectTo
+					os.Mkdir(PathTemplateTo + "/" + object, os.FileMode(0777))
+
+					f1, err3 := os.Create(PathTemplateTo + "/" + object + "/" + f.Name())
+					//checkError(err)
+					if err3 != nil {
+						fmt.Println("Error with " + f.Name())
+					} else {
+						objectOs, err2 := json.Marshal(dat)
+						if err2 != nil {
+							fmt.Println("erro json marshal")
+						} else {
+							f1.WriteString(string(objectOs))
+							f1.Sync()
+						}
+					}
+				}
+			}
+		}
+	}
+
 }

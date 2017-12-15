@@ -1,0 +1,11 @@
+pathTemplate: templates
+pathData: volumes
+clusterFrom: https://192.168.99.100:8443
+clusterTo: https://192.168.99.100:8443
+projectFrom: project1
+projectTo: project2
+usernameFrom: developer
+usernameTo: developer
+passwordFrom: developer
+passwordTo: developer
+objects: deployment
