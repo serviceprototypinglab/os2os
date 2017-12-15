@@ -28,13 +28,8 @@ import (
 // upDataCmd represents the upData command
 var upDataCmd = &cobra.Command{
 	Use:   "upData",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "Upload the data to new cluster",
+	Long: "Upload the data to new cluster",
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("upData called")
 

@@ -25,7 +25,7 @@ import (
 // convertCmd represents the convert command
 var convertCmd = &cobra.Command{
 	Use:   "convert",
-	Short: "Convert your template to adapt to your new cluster",
+	Short: "Convert the templates, adapting to the project names",
 	Long: `Convert your template to adapt to your new cluster.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("convert called")

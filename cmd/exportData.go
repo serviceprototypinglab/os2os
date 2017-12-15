@@ -28,7 +28,7 @@ import (
 // exportDataCmd represents the exportData command
 var exportDataCmd = &cobra.Command{
 	Use:   "exportData",
-	Short: "A brief description of your command",
+	Short: "Export the data in the path indicated",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
 
