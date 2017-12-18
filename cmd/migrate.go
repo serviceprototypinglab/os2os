@@ -24,7 +24,9 @@ import (
 var migrateCmd = &cobra.Command{
 	Use:   "migrate",
 	Short: "Full migration",
-	Long: `All the steps in a full migration`,
+	Long: `All the steps in a full migration.
+	Export the templates, export the data,
+convert the projects name, upload the templates, upload the data, down the old project`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("migrate called")
 		migrate(cmd, args)
@@ -62,12 +64,12 @@ func migrate(cmd *cobra.Command, args []string){
 	fmt.Println("------------*---------------")
 	fmt.Println("5. Uploading the data ...")
 	upData(cmd, args)
+	//fmt.Println("------------*---------------")
+	//fmt.Println("6. Deleting the data ...")
+	//downData(cmd, args)
 	fmt.Println("------------*---------------")
-	fmt.Println("6. Deleting the data ...")
-	downData(cmd, args)
-	fmt.Println("------------*---------------")
-	fmt.Println("7. Deleting the objects...")
-	//down(cmd, args)
+	fmt.Println("6. Deleting the objects...")
+	down(cmd, args)
 	fmt.Println("------------*---------------")
 	fmt.Println("Finished the migration")
 }

@@ -52,5 +52,5 @@ func init() {
 func migrateData(cmd *cobra.Command, args []string){
 	exportData(cmd, args)
 	upData(cmd, args)
-	downData(cmd, args)
+	//downData(cmd, args)
 }

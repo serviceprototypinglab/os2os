@@ -22,7 +22,7 @@ import (
 // migrateTemplateCmd represents the migrateTemplate command
 var migrateTemplateCmd = &cobra.Command{
 	Use:   "migrateTemplate",
-	Short: "A brief description of your command",
+	Short: "export, upload and delete the templates",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
 
