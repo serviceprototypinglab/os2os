@@ -28,8 +28,8 @@ import (
 // upDataCmd represents the upData command
 var upDataCmd = &cobra.Command{
 	Use:   "upData",
-	Short: "Upload the data to new cluster",
-	Long: "Upload the data to new cluster",
+	Short: "Upload the data (all the volumes) to the new cluster",
+	Long: "Upload the data (all the volumes) to the new cluster",
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("upData called")
 

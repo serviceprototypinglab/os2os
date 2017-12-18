@@ -23,8 +23,8 @@ import (
 // migrateDataCmd represents the migrateData command
 var migrateDataCmd = &cobra.Command{
 	Use:   "migrateData",
-	Short: "migrate a persistant volume between the two OpenShift clusters",
-	Long: `migrate a persistant volume between the two OpenShift clusters`,
+	Short: "Migrate the volumes between  two OpenShift clusters",
+	Long: `Migrate the volumes between  two OpenShift clusters`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("migrateData called")
 		migrateData(cmd, args)

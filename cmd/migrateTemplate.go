@@ -22,13 +22,8 @@ import (
 // migrateTemplateCmd represents the migrateTemplate command
 var migrateTemplateCmd = &cobra.Command{
 	Use:   "migrateTemplate",
-	Short: "export, upload and delete the templates",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "Export, upload and delete the templates",
+	Long: `Export, upload and delete the templates. (No data migration)`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("migrateTemplate called")
 		migrateTemplate(cmd, args)
